@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # 1. Database Service (MySQL)
+  # ==========================================
+  db:
+    image: mysql:8.0
+    container_name: telehealth_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secure_password
+      MYSQL_DATABASE: telehealth_db
+      MYSQL_USER: telehealth_user
+      MYSQL_PASSWORD: user_secure_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p=root_secure_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # 2. Backend REST API Service (Node.js)
+  # ==========================================
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: telehealth_api
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DATABASE_URL=mysql://telehealth_user:user_secure_password@db:3306/telehealth_db
+      - JWT_SECRET=telehealth_jwt_production_secret_token_2026
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ==========================================
+  # 3. Administrative Web Service (React / Nginx)
+  # ==========================================
+  web:
+    build:
+      context: ./client-web
+      dockerfile: Dockerfile
+    container_name: telehealth_web
+    restart: always
+    ports:
+      - "3000:80" # Maps local port 3000 to the container's public Nginx web server on port 80
+    depends_on:
+      - api
+
+  # ==========================================
+  # 4. Mobile Patient Dev Service (React Native / Expo)
+  # ==========================================
+  app:
+    build:
+      context: ./client-app
+      dockerfile: Dockerfile
+    container_name: telehealth_mobile_dev
+    restart: always
+    ports:
+      - "8081:8081"   # Metro bundler communication port
+      - "19000:19000" # Expo CLI server port
+      - "19001:19001" # Expo packager port
+      - "19002:19002" # Expo Dev Tools interface port
+    environment:
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - REACT_NATIVE_PACKAGER_HOSTNAME=localhost
+    depends_on:
+      - api
+
+volumes:
+  mysql_data:
+    driver: local

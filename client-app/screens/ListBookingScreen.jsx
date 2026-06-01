@@ -1,48 +1,11 @@
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { Consult, styles } from '../constants/styles';
 import ProfileCard from '../components/ProfileCard';
-import bookingService from './../services/BookingService';
+import useBookingList from '../hooks/useBookingList';
 
 export default function ListBookingScreen() {
-  const [bookingInfo, setBookingInfo] = useState([]);
-
-  useEffect(() => {
-    const fetchBookingInfo = async () => {
-      try {
-        const data = await bookingService.bookingInfo();
-        setBookingInfo(data);
-      } catch (error) {
-        console.error("Failed to fetch booking information", error);
-      }
-    };
-
-    fetchBookingInfo();
-  }, []);
-
-  const handleDelete = async (bookingId) => {
-    Alert.alert(
-      "ยืนยันการลบ",
-      "คุณต้องการลบการจองนี้ใช่หรือไม่?",
-      [
-        { text: "ยกเลิก", style: "cancel" },
-        {
-          text: "ลบ",
-          onPress: async () => {
-            try {
-              await bookingService.deleteBooking(bookingId);
-              setBookingInfo(prevInfo => prevInfo.filter(booking => booking.id !== bookingId));
-              Alert.alert("สำเร็จ", "การจองถูกลบแล้ว");
-            } catch (error) {
-              // console.error("Failed to delete booking", error);
-              Alert.alert("ผิดพลาด", "ไม่สามารถลบการจองได้");
-            }
-          },
-          style: "destructive"
-        }
-      ]
-    );
-  };
+  const { bookingInfo, isLoading, handleDelete, refreshBookingInfo } = useBookingList();
 
   // Function to format date and time
   const formatDateTime = (isoDate) => {
@@ -58,35 +21,53 @@ export default function ListBookingScreen() {
     }).format(date);
   };
 
+  const renderBookingItem = ({ item }) => (
+    <View style={[Consult.card, { marginVertical: 6 }]}>
+      <Text style={{ fontSize: 18, fontWeight: '600', color: '#333' }}>
+        {formatDateTime(item.appointment)}
+      </Text>
+      <Text style={{ fontSize: 16, marginTop: 6, color: '#005B94', fontWeight: '500' }}>
+        {item.booking_type === 'bloodTest' ? 'จองคิวเจาะเลือด' : 'จองคิวปรึกษา'}
+      </Text>
+      {item.booking_detail ? (
+        <Text style={{ fontSize: 15, marginTop: 4, color: '#666', fontStyle: 'italic' }}>
+          {item.booking_detail}
+        </Text>
+      ) : null}
+      <TouchableOpacity onPress={() => handleDelete(item.id)} style={{ marginTop: 12 }}>
+        <Text style={{ color: '#D9534F', fontWeight: 'bold', fontSize: 15 }}>ลบการจอง</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={styles.main}>
       <ProfileCard />
-      <View style={[styles.servicesContainer, { paddingHorizontal: 16, paddingVertical: 10 }]}>
-        <Text style={[Consult.header]}>
+      <View style={[styles.servicesContainer, { paddingHorizontal: 16, paddingVertical: 10, flex: 1 }]}>
+        <Text style={[Consult.header, { marginBottom: 10 }]}>
           สรุปรายการนัดหมาย
         </Text>
-        <ScrollView style={{ marginTop: 10 }}>
-          {bookingInfo.length > 0 ? (
-            bookingInfo.map((booking, index) => (
-              <View key={index} style={[Consult.card]}>
-                <Text style={{ fontSize: 18, fontWeight: '500', color: '#555' }}>
-                  {formatDateTime(booking.appointment)}
-                </Text>
-                <Text style={{ fontSize: 16, marginTop: 4, color: '#777' }}>
-                  {booking.booking_type === 'bloodTest' ? 'จองคิวเจาะเลือด' : 'จองคิวปรึกษา'}
-                </Text>
-                <Text style={{ fontSize: 16, marginTop: 4, color: '#777' }}>
-                  {booking.booking_detail}
-                </Text>
-                <TouchableOpacity onPress={() => handleDelete(booking.id)} style={{ marginTop: 10 }}>
-                  <Text style={{ color: 'red', fontWeight: 'bold' }}>ลบการจอง</Text>
-                </TouchableOpacity>
-              </View>
-            ))
-          ) : (
-            <Text>ไม่พบข้อมูลรายการนัดหมาย</Text>
-          )}
-        </ScrollView>
+
+        {isLoading && bookingInfo.length === 0 ? (
+          <ActivityIndicator size="large" color="#005B94" style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            data={bookingInfo}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={renderBookingItem}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={5}
+            onRefresh={refreshBookingInfo}
+            refreshing={isLoading}
+            ListEmptyComponent={
+              <Text style={{ textAlign: 'center', color: '#888', marginTop: 30, fontSize: 16 }}>
+                ไม่พบข้อมูลรายการนัดหมาย
+              </Text>
+            }
+            contentContainerStyle={{ paddingBottom: 20 }}
+          />
+        )}
       </View>
     </View>
   );

@@ -1,182 +1,73 @@
-const prisma = require("../config/db.config")
-const InternalServer = require("../exceptions/internal-server")
+const answerService = require("../services/answerService");
 
-exports.createAnswer = async (req, res) => {
+exports.createAnswer = async (req, res, next) => {
     try {
-        // Destructure the data from the request body
-        const { questionId, answerTexts } = req.body;
-
-        // Ensure questionId is an integer
-        const parsedQuestionId = parseInt(questionId, 10);
-
-        // Check if parsedQuestionId is a valid number
-        if (isNaN(parsedQuestionId)) {
-            return res.status(400).json({ message: "Invalid question ID provided." });
-        }
-
-        // Check if answerTexts is an array and not empty
-        if (!Array.isArray(answerTexts) || answerTexts.length === 0) {
-            return res.status(400).json({ message: "คำตอบไม่สามารถเป็นค่าว่างหรือไม่ถูกต้อง" });
-        }
-
-        // Insert multiple answers into the database
-        const insert = await prisma.answer.createMany({
-            data: answerTexts.map(text => ({
-                questionId: parsedQuestionId,  // Use the parsed integer here
-                answer_text: text
-            }))
-        });
-
+        const insertResult = await answerService.createAnswer(req.body);
         return res.status(201).json({
             message: "Answers created successfully",
-            data: insert
+            data: insertResult
         });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "เกิดข้อผิดพลาด!" });
+        next(error);
     }
 };
 
-exports.listAnswer = async (req, res) => {
+exports.listAnswer = async (req, res, next) => {
     try {
-        const query = await prisma.answer.findMany({
-            include: {
-                question: {
-                    select: {
-                        ques_name: true
-                    }
-                }
-            }
-        })
-
-        // Corrected response
+        const query = await answerService.listAnswer();
         return res.status(200).json({
             data: query
-        })
+        });
     } catch (error) {
-        // Assuming InternalServer handles the response properly
-        InternalServer(res, error)
+        next(error);
     }
-}
+};
 
-exports.answerById = async (req, res) => {
+exports.answerById = async (req, res, next) => {
     try {
-        const answerId = parseInt(req.params.id)
-
-        if (!answerId) {
-            return res.status(404).json({ message: "Answer not found" })
-        }
-
-        const answer = await prisma.answer.findUnique({
-            where: { id: answerId },
-            include: {
-                question: {
-                    select: {
-                        ques_name: true
-                    }
-                }
-            }
-        })
-
-        if (!answer) {
-            return res.status(404).json({ message: "Answer not found" })
-        }
-
+        const answerId = parseInt(req.params.id, 10);
+        const answer = await answerService.answerById(answerId);
         return res.status(200).json({
             data: answer
-        })
+        });
     } catch (error) {
-        InternalServer(res, error)
+        next(error);
     }
-}
+};
 
-exports.searchAnswer = async (req, res) => {
+exports.searchAnswer = async (req, res, next) => {
     try {
         const { questionId } = req.query;
-
-        // Create an empty where clause
-        const whereClause = {};
-
-        // Check if questionId is provided and filter accordingly
-        if (questionId) {
-            whereClause.questionId = parseInt(questionId);  // Ensure questionId is treated as an integer
-            // console.log('Parsed questionId:', whereClause.questionId);  // Log for debugging
-        }
-
-        // Use findMany to retrieve all matching answers, allowing for filtering
-        const answers = await prisma.answer.findMany({
-            where: whereClause,
-            include: {
-                question: {
-                    select: {
-                        ques_name: true,
-                        id: true
-                    }
-                }
-            }
-        });
-
-        // Log the answers to check the result
-        // console.log('Found answers:', answers);
-
-        // If no answers are found, return a 404 response
-        if (answers.length === 0) {
-            return res.status(404).json({ message: "Answers not found" });
-        }
-
-        // Return the found answers
+        const answers = await answerService.searchAnswer(questionId);
         return res.status(200).json({
             data: answers
         });
     } catch (error) {
-        // Call the InternalServer function to handle errors
-        InternalServer(res, error);
+        next(error);
     }
 };
 
-exports.updateAnswer = async (req, res) => {
+exports.updateAnswer = async (req, res, next) => {
     try {
-        const answerId = parseInt(req.params.id);
-        const { answer_text } = req.body;
-
-        if (!answerId) {
-            return res.status(404).json({ message: "Answer not found" });
-        }
-
-        const updatedAnswer = await prisma.answer.update({
-            where: { id: answerId },
-            data: {
-                answer_text: answer_text
-            }
-        });
-
-        console.log(updatedAnswer);
+        const answerId = parseInt(req.params.id, 10);
+        const updatedAnswer = await answerService.updateAnswer(answerId, req.body);
         return res.status(200).json({
             message: "Answer updated successfully",
             data: updatedAnswer
         });
     } catch (error) {
-        InternalServer(res, error);
+        next(error);
     }
 };
 
-
-exports.deleteAnswer = async (req, res) => {
+exports.deleteAnswer = async (req, res, next) => {
     try {
-        const answerId = parseInt(req.params.id)
-
-        if (!answerId) {
-            return res.status(404).json({ message: "Answer not found" })
-        }
-
-        await prisma.answer.delete({
-            where: { id: answerId }
-        })
-
+        const answerId = parseInt(req.params.id, 10);
+        await answerService.deleteAnswer(answerId);
         return res.status(200).json({
             message: "Answer deleted successfully"
-        })
+        });
     } catch (error) {
-        InternalServer(res, error)
+        next(error);
     }
-}
+};

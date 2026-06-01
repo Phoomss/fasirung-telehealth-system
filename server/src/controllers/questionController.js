@@ -1,107 +1,60 @@
-const prisma = require("../config/db.config")
-const InternalServer = require("../exceptions/internal-server")
+const questionService = require("../services/questionService");
 
-exports.createQuestion = async (req, res) => {
+exports.createQuestion = async (req, res, next) => {
     try {
-        const { ques_name } = req.body
-
-        const Insert = await prisma.question.create({
-            data: {
-                ques_name: ques_name
-            }
-        })
-
+        const newQuestion = await questionService.createQuestion(req.body);
         return res.status(201).json({
             message: "Question created",
-            data: Insert
-        })
+            data: newQuestion
+        });
     } catch (error) {
-        InternalServer(res, error)
+        next(error);
     }
-}
+};
 
-exports.listQuestion = async (req, res) => {
+exports.listQuestion = async (req, res, next) => {
     try {
-        // Fetch the list of questions
-        const query = await prisma.question.findMany();
-
-        // Get the count of questions
-        const count = await prisma.question.count();
-
-        // Return both the data and the count
+        const { query, count } = await questionService.listQuestion();
         return res.status(200).json({
             data: query,
             count: count
         });
     } catch (error) {
-        InternalServer(res, error);
+        next(error);
     }
 };
 
-
-exports.questionById = async (req, res) => {
+exports.questionById = async (req, res, next) => {
     try {
-        const questionId = parseInt(req.params.id)
-
-        if (!questionId) {
-            return res.status(404).json({ message: "Question not found" })
-        }
-
-        const questionById = await prisma.question.findUnique({
-            where: { id: questionId }
-        })
-
-        if (!questionById) {
-            return res.status(404).json({ message: "Question not found" })
-        }
-
-        return res.status(200).json({
-            data: questionById
-        })
+        const questionId = parseInt(req.params.id, 10);
+        const question = await questionService.questionById(questionId);
+        return res.status(200).json({ data: question });
     } catch (error) {
-        InternalServer(res, error)
+        next(error);
     }
-}
+};
 
-exports.updateQuestion = async (req, res) => {
+exports.updateQuestion = async (req, res, next) => {
     try {
-        const questionId = parseInt(req.params.id)
-        const { ques_name } = req.body
-
-        if (!questionId) {
-            return res.status(404).json({ message: "Question not found" })
-        }
-
-        const updatedQuestion = await prisma.question.update({
-            where: { id: questionId },
-            data: { ques_name }
-        })
-
+        const questionId = parseInt(req.params.id, 10);
+        const updatedQuestion = await questionService.updateQuestion(questionId, req.body);
         return res.status(200).json({
             message: "Question updated",
             data: updatedQuestion
-        })
+        });
     } catch (error) {
-        InternalServer(res, error)
+        next(error);
     }
-}
+};
 
-exports.deleteQuestion = async (req, res) => {
+exports.deleteQuestion = async (req, res, next) => {
     try {
-        const questionId = parseInt(req.params.id)
-
-        if (!questionId) {
-            return res.status(404).json({ message: "Question not found" })
-        }
-
-        await prisma.question.delete({
-            where: { id: questionId }
-        })
-
+        const questionId = parseInt(req.params.id, 10);
+        await questionService.deleteQuestion(questionId);
         return res.status(200).json({
             message: "Question deleted"
-        })
+        });
     } catch (error) {
-        InternalServer(res, error)
+        next(error);
     }
-}
+};

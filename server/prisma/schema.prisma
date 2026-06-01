@@ -64,6 +64,7 @@ model Booking {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("bookings")
 }
 
@@ -79,6 +80,9 @@ model Case {
   officer   User    @relation("OfficerCases", fields: [officerId], references: [id], onDelete: Cascade)
   physician User    @relation("PhysicianCases", fields: [physicianId], references: [id], onDelete: Cascade)
 
+  @@index([bookingId])
+  @@index([officerId])
+  @@index([physicianId])
   @@map("cases")
 }
 
@@ -115,5 +119,8 @@ model Response {
   question Question @relation(fields: [questionId], references: [id])
   answer   Answer   @relation(fields: [answerId], references: [id])
 
+  @@index([userId])
+  @@index([questionId])
+  @@index([answerId])
   @@map("responses")
 }
