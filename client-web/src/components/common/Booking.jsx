@@ -1,5 +1,6 @@
 import React from 'react';
 import useBookings from '../../hooks/useBookings';
+import { Table } from '../ui/Table';
 
 const Booking = () => {
   const {
@@ -17,23 +18,69 @@ const Booking = () => {
     filteredBookings
   } = useBookings(10);
 
+  // Define column mappings for our atomic Table component
+  const columns = [
+    {
+      header: '#',
+      accessor: (item) => (
+        <span className="font-semibold text-gray-500">
+          {indexOfFirstItem + currentBookings.indexOf(item) + 1}
+        </span>
+      ),
+      width: '80px'
+    },
+    {
+      header: 'ข้อมูลผู้นัดหมาย',
+      accessor: (item) => (
+        <div className="text-start">
+          <div className="font-semibold text-gray-800">{item.user?.title}{item.user?.full_name}</div>
+          <div className="text-sm text-gray-500">โทรศัพท์: {item.user?.phone}</div>
+        </div>
+      )
+    },
+    {
+      header: 'ประเภทการนัดหมาย',
+      accessor: (item) => (
+        <span className={`badge ${item.booking_type === 'bloodTest' ? 'bg-info text-dark' : 'bg-primary'}`}>
+          {item.booking_type === 'bloodTest' ? 'จองคิวเจาะเลือด' : 'จองคิวปรึกษา'}
+        </span>
+      ),
+      width: '200px'
+    },
+    {
+      header: 'วันที่และเวลานัดหมาย',
+      accessor: (item) => (
+        <span className="text-gray-600 font-medium">
+          {new Date(item.appointment).toLocaleString('th-TH', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+          })}
+        </span>
+      ),
+      width: '240px'
+    },
+    {
+      header: 'รายละเอียด',
+      accessor: (item) => (
+        <span className="text-start text-gray-600 italic block">
+          {item.booking_detail || "-"}
+        </span>
+      )
+    }
+  ];
+
   return (
     <div className='tb-content mt-3'>
       {error && <div className="alert alert-danger">{error}</div>}
-      {isLoading && (
-        <div className="text-center my-4">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">กำลังโหลด...</span>
-          </div>
-        </div>
-      )}
 
       {/* Search Dropdown for booking_type */}
-      <div className="mb-3">
-        <label htmlFor="bookingType" className="form-label font-semibold">ค้นหาตามประเภทการนัดหมาย:</label>
+      <div className="mb-4">
+        <label htmlFor="bookingType" className="block text-sm font-semibold text-gray-700 mb-1 text-start">
+          ค้นหาตามประเภทการนัดหมาย:
+        </label>
         <select
           id="bookingType"
-          className="form-select border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          className="form-select w-full max-w-xs border border-gray-300 rounded-[var(--radius-interactive)] focus:ring-1 focus:ring-[var(--color-brand-500)] focus:border-[var(--color-brand-500)] shadow-sm bg-white p-2"
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}
         >
@@ -43,53 +90,16 @@ const Booking = () => {
         </select>
       </div>
 
-      <div className="table-responsive shadow-sm rounded-lg overflow-hidden border border-gray-200">
-        <table className="table table-bordered table-gray table-striped text-center align-middle mb-0">
-          <thead className="table-light">
-            <tr>
-              <th scope="col" style={{ width: '80px' }}>#</th>
-              <th scope="col">ข้อมูลผู้นัดหมาย</th>
-              <th scope="col" style={{ width: '200px' }}>ประเภทการนัดหมาย</th>
-              <th scope="col" style={{ width: '240px' }}>วันที่และเวลานัดหมาย</th>
-              <th scope="col">รายละเอียด</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!isLoading && currentBookings.length > 0 ? (
-              currentBookings.map((booking, index) => (
-                <tr key={booking.id} className="hover:bg-gray-50 transition-colors duration-150">
-                  <td className="font-semibold text-gray-500">{indexOfFirstItem + index + 1}</td>
-                  <td className="text-start">
-                    <div className="font-semibold text-gray-800">{booking.user.title}{booking.user.full_name}</div>
-                    <div className="text-sm text-gray-500">โทรศัพท์: {booking.user.phone}</div>
-                  </td>
-                  <td>
-                    <span className={`badge ${booking.booking_type === 'bloodTest' ? 'bg-info text-dark' : 'bg-primary'}`}>
-                      {booking.booking_type === 'bloodTest' ? 'จองคิวเจาะเลือด' : 'จองคิวปรึกษา'}
-                    </span>
-                  </td>
-                  <td className="text-gray-600 font-medium">
-                    {new Date(booking.appointment).toLocaleString('th-TH', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short'
-                    })}
-                  </td>
-                  <td className="text-start text-gray-600 italic">
-                    {booking.booking_detail || "-"}
-                  </td>
-                </tr>
-              ))
-            ) : !isLoading ? (
-              <tr>
-                <td colSpan="5" className="text-muted py-4">ไม่พบข้อมูลการนัดหมาย</td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </div>
+      {/* Reusable, Virtualized Table Component */}
+      <Table
+        data={currentBookings}
+        columns={columns}
+        isLoading={isLoading}
+        emptyMessage="ไม่พบข้อมูลการนัดหมาย"
+      />
 
       {!isLoading && filteredBookings.length > 0 && (
-        <nav aria-label="Page navigation" className="mt-3">
+        <nav aria-label="Page navigation" className="mt-4">
           <ul className="pagination justify-content-end mb-0">
             <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
               <button className="page-link shadow-none" onClick={handlePreviousPage}>ก่อนหน้า</button>
