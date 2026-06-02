@@ -19,3 +19,272 @@
   --radius-primary: 0.5rem;       /* 8px */
   --radius-interactive: 0.375rem;   /* 6px */
 }
+
+@layer base {
+  html {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .tw-field {
+    @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100 disabled:cursor-not-allowed disabled:bg-slate-100;
+  }
+
+  .tw-label {
+    @apply mb-1 block text-sm font-semibold text-slate-700;
+  }
+
+  .tw-card {
+    @apply rounded-lg border border-slate-200 bg-white shadow-sm;
+  }
+
+  .tw-page-title {
+    @apply text-2xl font-bold text-slate-950;
+  }
+
+  .container,
+  .container-fluid {
+    @apply w-full;
+  }
+
+  .row {
+    @apply grid gap-4 md:grid-cols-12;
+  }
+
+  .col-4 {
+    @apply md:col-span-4;
+  }
+
+  .col-6,
+  .col-sm-6,
+  .col-md-6 {
+    @apply md:col-span-6;
+  }
+
+  .col-8 {
+    @apply md:col-span-8;
+  }
+
+  .col-12,
+  .col-md-12 {
+    @apply md:col-span-12;
+  }
+
+  .col-md-4,
+  .col-lg-3 {
+    @apply md:col-span-4 lg:col-span-3;
+  }
+
+  .col-lg-6 {
+    @apply md:col-span-6;
+  }
+
+  .mb-0 {
+    @apply mb-0;
+  }
+
+  .mb-2 {
+    @apply mb-2;
+  }
+
+  .mb-3 {
+    @apply mb-3;
+  }
+
+  .mb-4 {
+    @apply mb-4;
+  }
+
+  .mt-2 {
+    @apply mt-2;
+  }
+
+  .mt-3 {
+    @apply mt-3;
+  }
+
+  .mt-4 {
+    @apply mt-4;
+  }
+
+  .mt-5 {
+    @apply mt-5;
+  }
+
+  .p-0 {
+    @apply p-0;
+  }
+
+  .p-2 {
+    @apply p-2;
+  }
+
+  .p-3 {
+    @apply p-3;
+  }
+
+  .text-center {
+    @apply text-center;
+  }
+
+  .text-primary {
+    @apply text-sky-700;
+  }
+
+  .text-danger {
+    @apply text-rose-700;
+  }
+
+  .bg-light {
+    @apply bg-slate-50;
+  }
+
+  .bg-success {
+    @apply bg-emerald-600;
+  }
+
+  .bg-info {
+    @apply bg-sky-600;
+  }
+
+  .rounded {
+    @apply rounded-md;
+  }
+
+  .shadow-sm {
+    @apply shadow-sm;
+  }
+
+  .font-medium {
+    @apply font-medium;
+  }
+
+  .cursor-pointer {
+    @apply cursor-pointer;
+  }
+
+  .card {
+    @apply rounded-lg border border-slate-200 bg-white shadow-sm;
+  }
+
+  .card-header {
+    @apply border-b border-slate-200 px-4 py-3 font-semibold text-slate-900;
+  }
+
+  .card-body {
+    @apply p-4;
+  }
+
+  .form-group {
+    @apply space-y-1;
+  }
+
+  .form-control {
+    @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100 disabled:cursor-not-allowed disabled:bg-slate-100;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary,
+  .btn-info {
+    @apply bg-sky-600 text-white hover:bg-sky-700;
+  }
+
+  .btn-success {
+    @apply bg-emerald-600 text-white hover:bg-emerald-700;
+  }
+
+  .btn-danger {
+    @apply bg-rose-600 text-white hover:bg-rose-700;
+  }
+
+  .btn-link {
+    @apply bg-transparent px-0 py-0 text-sky-700 hover:text-sky-800;
+  }
+
+  .btn-sm {
+    @apply px-2.5 py-1.5 text-xs;
+  }
+
+  .btn-block {
+    @apply w-full;
+  }
+
+  .table-responsive {
+    @apply overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm;
+  }
+
+  .table {
+    @apply w-full text-center text-sm;
+  }
+
+  .table thead {
+    @apply bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500;
+  }
+
+  .table th,
+  .table td {
+    @apply border-b border-slate-100 px-4 py-3;
+  }
+
+  .table-striped tbody tr:nth-child(even) {
+    @apply bg-slate-50/70;
+  }
+
+  .pagination {
+    @apply mt-4 flex items-center gap-1;
+  }
+
+  .justify-content-end {
+    @apply justify-end;
+  }
+
+  .page-link {
+    @apply rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50;
+  }
+
+  .page-item.active .page-link {
+    @apply border-sky-600 bg-sky-600 text-white;
+  }
+
+  .page-item.disabled .page-link {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  .small-box {
+    @apply rounded-lg p-5 text-white shadow-sm;
+  }
+
+  .small-box h3 {
+    @apply text-3xl font-bold;
+  }
+
+  .small-box p {
+    @apply mt-1 text-sm font-medium text-white/90;
+  }
+
+  .icon,
+  .nav-icon,
+  .fas,
+  .fa {
+    @apply hidden;
+  }
+}

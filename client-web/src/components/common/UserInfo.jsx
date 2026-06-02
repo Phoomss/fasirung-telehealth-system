@@ -17,23 +17,19 @@ const UserInfo = () => {
     }, []);
 
     return (
-        <>
-            <div className="user-info-card container mt-4 user-panel">
-                <div className="card shadow-sm">
-                    <div className="card-body d-flex align-items-center">
-                        <div className="info">
-                            <h5 className="card-title text-primary">{userInfo.title}{userInfo.full_name}</h5>
-                            <p className="card-text">
-                                <span className="font-weight-bold">สถานะ: </span>
-                                <span className='bg-success p-2 badge'>
-                                    {userInfo.role}
-                                </span>
-                            </p>
-                        </div>
-                    </div>
+        <div className="rounded-lg border border-sky-100 bg-sky-50/80 p-4">
+            <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-600 text-sm font-bold text-white">
+                    {userInfo.full_name ? userInfo.full_name.charAt(0) : 'U'}
+                </div>
+                <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-slate-950">{userInfo.title}{userInfo.full_name}</p>
+                    <p className="mt-1 inline-flex rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">
+                        {userInfo.role || 'USER'}
+                    </p>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

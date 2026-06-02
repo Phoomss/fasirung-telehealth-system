@@ -76,57 +76,51 @@ const Login = () => {
     };
 
     return (
-        <div className='hold-transition login-page'>
-            <div className="login-box">
-                <div className="login-logo">
-                    <b>ระบบ</b>ให้คำปรึกษาทางไกลสำหรับผู้รับบริการคลินิกเทคนิคการแพทย์ฟ้าสีรุ้งจังหวัดนครปฐม
+        <div className='flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10'>
+            <div className="w-full max-w-md">
+                <div className="mb-6 text-center">
+                    <p className="text-sm font-semibold uppercase tracking-wide text-sky-600">Fasirung Telehealth</p>
+                    <h1 className="mt-2 text-2xl font-bold text-slate-950">ระบบให้คำปรึกษาทางไกล</h1>
+                    <p className="mt-2 text-sm text-slate-600">สำหรับผู้รับบริการคลินิกเทคนิคการแพทย์ฟ้าสีรุ้งจังหวัดนครปฐม</p>
                 </div>
-                <div className="card">
-                    <div className="card-body login-card-body">
-                        <p className="login-box-msg">ล็อกอินเพื่อเข้าสู่ระบบ</p>
-                        <form onSubmit={handleSubmit}>
-                            <div className="input-group mb-3">
+                <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+                        <p className="mb-5 text-center text-sm font-medium text-slate-600">ล็อกอินเพื่อเข้าสู่ระบบ</p>
+                        <form className="space-y-4" onSubmit={handleSubmit}>
+                            <div>
+                                <label className="tw-label" htmlFor="username">Username</label>
                                 <input
+                                    id="username"
                                     type="username"
-                                    className="form-control"
+                                    className="tw-field"
                                     placeholder="username"
                                     name="username"
                                     value={loginData.username}
                                     onChange={handleChange}
                                     required
                                 />
-                                <div className="input-group-append">
-                                    <div className="input-group-text">
-                                        <span className="fas fa-envelope" />
-                                    </div>
-                                </div>
                             </div>
-                            <div className="input-group mb-3">
+                            <div>
+                                <label className="tw-label" htmlFor="password">Password</label>
                                 <input
+                                    id="password"
                                     type="password"
-                                    className="form-control"
+                                    className="tw-field"
                                     placeholder="Password"
                                     name="password"
                                     value={loginData.password}
                                     onChange={handleChange}
                                     required
                                 />
-                                <div className="input-group-append">
-                                    <div className="input-group-text">
-                                        <span className="fas fa-lock" />
-                                    </div>
-                                </div>
                             </div>
                             <div>
-                                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                                <button type="submit" className="w-full rounded-md bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60" disabled={loading}>
                                     {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
                                 </button>
                             </div>
-                            <p className="mb-0">
-                                <NavLink to="/register" className="text-center">โปรดสมัครก่อนเข้าสู่ระบบ</NavLink>
+                            <p className="text-center text-sm text-slate-600">
+                                <NavLink to="/register" className="font-semibold text-sky-700 hover:text-sky-800">โปรดสมัครก่อนเข้าสู่ระบบ</NavLink>
                             </p>
                         </form>
-                    </div>
                 </div>
             </div>
         </div>

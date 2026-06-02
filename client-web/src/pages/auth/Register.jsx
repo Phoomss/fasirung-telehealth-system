@@ -64,21 +64,22 @@ const Register = () => {
     };
 
     return (
-        <div className='hold-transition register-page'>
-            <div className="register-box">
-                <div className="register-logo text-center mb-3">
-                    <b>ระบบให้คำปรึกษาทางไกล</b>
-                    <p>สำหรับผู้รับบริการคลินิกเทคนิคการแพทย์ฟ้าสีรุ้งจังหวัดนครปฐม</p>
+        <div className='flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10'>
+            <div className="w-full max-w-2xl">
+                <div className="mb-6 text-center">
+                    <p className="text-sm font-semibold uppercase tracking-wide text-sky-600">Fasirung Telehealth</p>
+                    <h1 className="mt-2 text-2xl font-bold text-slate-950">ระบบให้คำปรึกษาทางไกล</h1>
+                    <p className="mt-2 text-sm text-slate-600">สำหรับผู้รับบริการคลินิกเทคนิคการแพทย์ฟ้าสีรุ้งจังหวัดนครปฐม</p>
                 </div>
-                <div className="card">
-                    <div className="card-body register-card-body">
-                        <p className="login-box-msg">สมัครใช้งานเพื่อเป็นสมาชิกระบบ</p>
-                        <form onSubmit={handleSubmit}>
-                            <div className="row">
-                                <div className="col-4">
-                                    <div className="input-group mb-3">
+                <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+                        <p className="mb-5 text-center text-sm font-medium text-slate-600">สมัครใช้งานเพื่อเป็นสมาชิกระบบ</p>
+                        <form className="space-y-4" onSubmit={handleSubmit}>
+                            <div className="grid gap-4 sm:grid-cols-3">
+                                <div>
+                                    <label className="tw-label" htmlFor="title">คำนำหน้า</label>
                                         <select
-                                            className="form-control"
+                                            id="title"
+                                            className="tw-field"
                                             name="title"
                                             value={signupData.title}
                                             onChange={handleChange}
@@ -91,96 +92,83 @@ const Register = () => {
                                             <option value="Mr.">Mr.</option>
                                             <option value="Ms.">Ms.</option>
                                         </select>
-                                    </div>
                                 </div>
 
-                                <div className="col-8">
-                                    <div className="input-group mb-3">
+                                <div className="sm:col-span-2">
+                                    <label className="tw-label" htmlFor="full_name">ชื่อเต็ม</label>
                                         <input
+                                            id="full_name"
                                             type="text"
-                                            className="form-control"
+                                            className="tw-field"
                                             placeholder="ชื่อเต็ม"
                                             name="full_name"
                                             value={signupData.full_name}
                                             onChange={handleChange}
                                             required
                                         />
-                                        <div className="input-group-append">
-                                            <div className="input-group-text">
-                                                <span className="fas fa-user" />
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
-                            <div className="input-group mb-3">
+                            <div>
+                                <label className="tw-label" htmlFor="reg_username">ชื่อผู้ใช้</label>
                                 <input
+                                    id="reg_username"
                                     type="username"
-                                    className="form-control"
+                                    className="tw-field"
                                     placeholder="ชื่อผู้ใช้"
                                     name="username"
                                     value={signupData.username}  
                                     onChange={handleChange}
                                     required
                                 />
-                                <div className="input-group-append">
-                                    <div className="input-group-text">
-                                        <span className="fas fa-envelope" />
-                                    </div>
-                                </div>
                             </div>
-                            <div className="input-group mb-3">
+                            <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label className="tw-label" htmlFor="reg_password">รหัสผ่าน</label>
                                 <input
+                                    id="reg_password"
                                     type="password"
-                                    className="form-control"
+                                    className="tw-field"
                                     placeholder="รหัสผ่าน"
                                     name="password"
                                     value={signupData.password}  // การผูกข้อมูลที่ถูกต้อง
                                     onChange={handleChange}
                                     required
                                 />
-                                <div className="input-group-append">
-                                    <div className="input-group-text">
-                                        <span className="fas fa-lock" />
-                                    </div>
-                                </div>
                             </div>
-                            <div className="input-group mb-3">
+                            <div>
+                                <label className="tw-label" htmlFor="confirmPassword">พิมพ์รหัสผ่านอีกครั้ง</label>
                                 <input
+                                    id="confirmPassword"
                                     type="password"
-                                    className="form-control"
+                                    className="tw-field"
                                     placeholder="พิมพ์รหัสผ่านอีกครั้ง"
                                     name="confirmPassword"
                                     value={signupData.confirmPassword}  // การผูกข้อมูลที่ถูกต้อง
                                     onChange={handleChange}
                                     required
                                 />
-                                <div className="input-group-append">
-                                    <div className="input-group-text">
-                                        <span className="fas fa-lock" />
-                                    </div>
-                                </div>
                             </div>
-                            <div className="input-group mb-3">
+                            </div>
+                            <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label className="tw-label" htmlFor="phone">เบอร์โทรศัพท์</label>
                                 <input
+                                    id="phone"
                                     type="tel"
-                                    className="form-control"
+                                    className="tw-field"
                                     placeholder="เบอร์โทรศัพท์"
                                     name="phone"  // ชื่อฟิลด์ที่ถูกต้อง
                                     value={signupData.phone}  // การผูกข้อมูลที่ถูกต้อง
                                     onChange={handleChange}
                                     required
                                 />
-                                <div className="input-group-append">
-                                    <div className="input-group-text">
-                                        <span className="fas fa-phone" />
-                                    </div>
-                                </div>
                             </div>
-                            <div className="form-group mb-3">
+                            <div>
+                                <label className="tw-label" htmlFor="role">บทบาท</label>
                                 <select
-                                    className="form-control"
+                                    id="role"
+                                    className="tw-field"
                                     name="role"
                                     value={signupData.role}
                                     onChange={handleChange}
@@ -191,10 +179,13 @@ const Register = () => {
                                     <option value="COUNSELOR">เจ้าหน้าที่ให้คำปรึกษา</option>
                                 </select>
                             </div>
-                            <div className="form-group mb-3">
+                            </div>
+                            <div>
+                                <label className="tw-label" htmlFor="age">อายุ</label>
                                 <input
+                                    id="age"
                                     type="number"
-                                    className="form-control"
+                                    className="tw-field"
                                     placeholder="อายุ"
                                     name="age"
                                     value={signupData.age}
@@ -202,15 +193,12 @@ const Register = () => {
                                     required
                                 />
                             </div>
-                            <div className="row">
-                                <div className="col-12">
-                                    <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                            <div>
+                                    <button type="submit" className="w-full rounded-md bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60" disabled={loading}>
                                         {loading ? 'กำลังลงทะเบียน...' : 'ลงทะเบียน'}
                                     </button>
-                                </div>
                             </div>
                         </form>
-                    </div>
                 </div>
             </div>
         </div>

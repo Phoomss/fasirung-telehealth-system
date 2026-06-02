@@ -2,22 +2,16 @@ import React from 'react'
 
 const Header = () => {
     return (
-        <div>
-            {/* Navbar */}
-            <nav className="main-header navbar navbar-expand navbar-white navbar-light">
-                {/* Left navbar links */}
-                <ul className="navbar-nav">
-                    <li className="nav-item">
-                        <a className="nav-link" data-widget="pushmenu" href="#" role="button"><i className="fas fa-bars" /></a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <a href="index.php" class="nav-link">ระบบให้คำปรึกษาทางไกลสำหรับผู้รับบริการคลินิกเทคนิคการแพทย์ฟ้าสีรุ้งจังหวัดนครปฐม</a>
-                    </li>
-                </ul>
-            </nav>
-            {/* /.navbar */}
-            
-        </div>
+        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-sky-600">Fasirung Telehealth</p>
+                    <h1 className="text-sm font-semibold text-slate-900 sm:text-base">
+                        ระบบให้คำปรึกษาทางไกล คลินิกเทคนิคการแพทย์ฟ้าสีรุ้ง จังหวัดนครปฐม
+                    </h1>
+                </div>
+            </div>
+        </header>
     )
 }
 

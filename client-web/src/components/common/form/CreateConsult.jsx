@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import userService from './../../../service/userService';
-import { Button, Modal, Form, Spinner, Alert } from 'react-bootstrap';
 import bookingService from '../../../service/bookingService';
 import Swal from 'sweetalert2';
 import caseService from '../../../service/caseService';
@@ -96,25 +95,28 @@ const CreateConsult = () => {
 
   return (
     <div>
-      <Button variant="primary" onClick={handleShow}>
+      <button className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700" onClick={handleShow}>
         เพิ่มเคสคนเขาปรึกษา
-      </Button>
+      </button>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>สร้างเคสคนเขาปรึกษา</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      {show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
+          <div className="w-full max-w-2xl rounded-lg bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+              <h2 className="text-lg font-bold text-slate-950">สร้างเคสคนเขาปรึกษา</h2>
+              <button className="rounded-md px-2 py-1 text-slate-500 hover:bg-slate-100" onClick={handleClose}>ปิด</button>
+            </div>
+            <div className="px-5 py-4">
           {isLoading ? (
-            <Spinner animation="border" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-sky-600" />
           ) : (
             <>
-              {error && <Alert variant="danger">{error}</Alert>}
-              <Form>
-                <Form.Group>
-                  <Form.Label>เลือกการจอง</Form.Label>
-                  <Form.Control
-                    as="select"
+              {error && <div className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700">{error}</div>}
+              <div className="space-y-4">
+                <div>
+                  <label className="tw-label">เลือกการจอง</label>
+                  <select
+                    className="tw-field"
                     name="bookingId"
                     value={caseData.bookingId}
                     onChange={handleInputChange}
@@ -138,13 +140,13 @@ const CreateConsult = () => {
                         </option>
                       );
                     })}
-                  </Form.Control>
-                </Form.Group>
+                  </select>
+                </div>
 
-                <Form.Group>
-                  <Form.Label>เลือกเจ้าหน้าที่ให้คำปรึกษา</Form.Label>
-                  <Form.Control
-                    as="select"
+                <div>
+                  <label className="tw-label">เลือกเจ้าหน้าที่ให้คำปรึกษา</label>
+                  <select
+                    className="tw-field"
                     name="physicianId"
                     value={caseData.physicianId}
                     onChange={handleInputChange}
@@ -155,45 +157,50 @@ const CreateConsult = () => {
                         {physician.title} {physician.full_name}
                       </option>
                     ))}
-                  </Form.Control>
-                </Form.Group>
+                  </select>
+                </div>
 
-                <Form.Group>
-                  <Form.Label>สถานะเคส</Form.Label>
-                  <Form.Control
+                <div>
+                  <label className="tw-label">สถานะเคส</label>
+                  <input
+                    className="tw-field"
                     type="text"
                     name="case_status"
                     value={caseData.case_status === 'accepting' ? 'accepting' : 'รับเคส'}
                     disabled
                   />
-                </Form.Group>
+                </div>
 
-                <Form.Group controlId="contentName">
-                  <Form.Label>ชื่อผู้รับเคส</Form.Label>
-                  <Form.Control
+                <div>
+                  <label className="tw-label" htmlFor="contentName">ชื่อผู้รับเคส</label>
+                  <input
+                    id="contentName"
+                    className="tw-field"
                     type="text"
                     name="officerId"
                     value={user ? user.full_name : ''}
                     disabled
                   />
-                </Form.Group>
-              </Form>
+                </div>
+              </div>
             </>
           )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+            </div>
+            <div className="flex justify-end gap-2 border-t border-slate-200 px-5 py-4">
+          <button className="rounded-md bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200" onClick={handleClose}>
             ปิด
-          </Button>
-          <Button
-            variant="primary"
+          </button>
+          <button
+            className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
             onClick={handleSubmit}
             disabled={isLoading || !caseData.bookingId || !caseData.physicianId}
           >
-            {isLoading ? <Spinner animation="border" size="sm" /> : "บันทึกเคส"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+            {isLoading ? "กำลังบันทึก..." : "บันทึกเคส"}
+          </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import answerService from './../../service/answerService';
 import Swal from 'sweetalert2';
-import { Form, Row, Col } from "react-bootstrap";
 
 const Answer = () => {
   const [answers, setAnswers] = useState([])
@@ -162,24 +161,23 @@ const Answer = () => {
     }
   };
   return (
-    <div className='tb-answer mt-3'>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <div className="mb-3 p-3 bg-light rounded shadow-sm">
-        <Row className="align-items-center">
-          {/* กล่องค้นหา */}
-          <Col xs={12} md={6} className="mb-2 mb-md-0">
-            <Form.Control
+    <div className='mt-4'>
+      {error && <div className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700">{error}</div>}
+      <div className="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="grid gap-3 md:grid-cols-2">
+          <div>
+            <input
               type="text"
-              placeholder="🔍 ค้นหาคำถามหรือคำตอบ..."
+              placeholder="ค้นหาคำถามหรือคำตอบ..."
               value={searchQuery}
               onChange={handleSearch}
-              className="form-control"
+              className="tw-field"
             />
-          </Col>
+          </div>
 
-          {/* เมนูเลือกคำถาม */}
-          <Col xs={12} md={6}>
-            <Form.Select
+          <div>
+            <select
+              className="tw-field"
               value={selectedQuestion}
               onChange={handleQuestionSelect}
               aria-label="เลือกคำถาม"
@@ -190,40 +188,40 @@ const Answer = () => {
                   {ques_name}
                 </option>
               ))}
-            </Form.Select>
-          </Col>
-        </Row>
+            </select>
+          </div>
+        </div>
       </div>
-      <div className="table-responsive">
-        <table className="table table-bordered table-gray table-striped text-center">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">คำถาม</th>
-              <th scope="col">คำตอบ</th>
-              <th scope="col">จัดการ</th>
+      <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+        <table className="w-full text-center text-sm">
+          <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <tr className="border-b border-slate-200">
+              <th className="px-4 py-3" scope="col">#</th>
+              <th className="px-4 py-3" scope="col">คำถาม</th>
+              <th className="px-4 py-3" scope="col">คำตอบ</th>
+              <th className="px-4 py-3" scope="col">จัดการ</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100 text-slate-700">
             {currentAnswers.length > 0 ? (
               currentAnswers.map((answer, index) => (
-                <tr key={answer.id}>
-                  <td>{indexOfFirstItem + index + 1}</td>
-                  <td>
+                <tr key={answer.id} className="hover:bg-slate-50">
+                  <td className="px-4 py-3">{indexOfFirstItem + index + 1}</td>
+                  <td className="px-4 py-3">
                     {answer.question.ques_name}
                   </td>
-                  <td>
+                  <td className="px-4 py-3">
                     {answer.answer_text}
                   </td>
-                  <td>
-                    <button className="btn btn-primary btn-sm" onClick={() => handleEdit(answer.id)}>แก้ไข</button>{' '}
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(answer.id)}>ลบ</button>
+                  <td className="space-x-2 px-4 py-3">
+                    <button className="rounded-md bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-100" onClick={() => handleEdit(answer.id)}>แก้ไข</button>{' '}
+                    <button className="rounded-md bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100" onClick={() => handleDelete(answer.id)}>ลบ</button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="3">ไม่พบข้อมูล</td>
+                <td className="px-4 py-8 text-slate-500" colSpan="4">ไม่พบข้อมูล</td>
               </tr>
             )}
           </tbody>
@@ -231,18 +229,18 @@ const Answer = () => {
       </div>
 
       {filteredAnswer.length > 0 && (
-        <nav aria-label="Page navigation example">
-          <ul className="pagination justify-content-end">
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={handlePreviousPage}>ก่อนหน้า</button>
+        <nav className="mt-4 flex justify-end" aria-label="Page navigation">
+          <ul className="flex items-center gap-1">
+            <li>
+              <button className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 disabled:cursor-not-allowed disabled:opacity-50" disabled={currentPage === 1} onClick={handlePreviousPage}>ก่อนหน้า</button>
             </li>
             {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                <button className="page-link" onClick={() => handlePageClick(index + 1)}>{index + 1}</button>
+              <li key={index}>
+                <button className={`rounded-md px-3 py-1.5 text-sm font-semibold ${currentPage === index + 1 ? 'bg-sky-600 text-white' : 'border border-slate-200 bg-white text-slate-700'}`} onClick={() => handlePageClick(index + 1)}>{index + 1}</button>
               </li>
             ))}
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={handleNextPage}>ถัดไป</button>
+            <li>
+              <button className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 disabled:cursor-not-allowed disabled:opacity-50" disabled={currentPage === totalPages} onClick={handleNextPage}>ถัดไป</button>
             </li>
           </ul>
         </nav>

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import answerService from './../../../service/answerService';
 import questionService from './../../../service/questionService';
-import { Button, Modal, Form } from 'react-bootstrap';
 
 const CreateAnswer = () => {
   const [answerTexts, setAnswerTexts] = useState(['']);
@@ -85,20 +83,23 @@ const CreateAnswer = () => {
 
   return (
     <div>
-      <Button variant="primary" onClick={handleShow}>
+      <button className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700" onClick={handleShow}>
         เพิ่มคำตอบสำหรับคำถาม
-      </Button>
+      </button>
 
-      {/* Modal for creating answers */}
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>สร้างคำตอบ</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Group controlId="questionSelect">
-            <Form.Label>เลือกคำถาม</Form.Label>
-            <Form.Control
-              as="select"
+      {show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
+          <div className="w-full max-w-xl rounded-lg bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+              <h2 className="text-lg font-bold text-slate-950">สร้างคำตอบ</h2>
+              <button className="rounded-md px-2 py-1 text-slate-500 hover:bg-slate-100" onClick={handleClose}>ปิด</button>
+            </div>
+            <div className="space-y-4 px-5 py-4">
+              <div>
+                <label className="tw-label" htmlFor="questionSelect">เลือกคำถาม</label>
+                <select
+              id="questionSelect"
+              className="tw-field"
               value={selectedQuestionId}
               onChange={(e) => setSelectedQuestionId(e.target.value)}
             >
@@ -108,48 +109,47 @@ const CreateAnswer = () => {
                   {question.ques_name}
                 </option>
               ))}
-            </Form.Control>
-          </Form.Group>
+                </select>
+              </div>
 
-          <Form>
             {answerTexts.map((answer, index) => (
-              <div key={index} className="mb-2">
-                <Form.Control
+              <div key={index} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <input
+                  className="tw-field"
                   type="text"
                   value={answer}
                   onChange={(e) => handleAnswerChange(index, e.target.value)}
                   placeholder={`คำตอบที่ ${index + 1}`}
                 />
-                <Button
-                  variant="danger"
-                  size="sm"
-                  className="mt-2"
+                <button
+                  className="mt-2 rounded-md bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-50"
                   onClick={() => handleRemoveAnswer(index)}
                   disabled={answerTexts.length <= 1}
                 >
                   ลบคำตอบ
-                </Button>
+                </button>
               </div>
             ))}
 
-            <Button variant="success" className="mb-3" onClick={handleAddAnswer}>
+            <button className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700" onClick={handleAddAnswer}>
               เพิ่มคำตอบ
-            </Button>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose} disabled={isLoading}>
+            </button>
+            </div>
+            <div className="flex justify-end gap-2 border-t border-slate-200 px-5 py-4">
+          <button className="rounded-md bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200" onClick={handleClose} disabled={isLoading}>
             ปิด
-          </Button>
-          <Button
-            variant="primary"
+          </button>
+          <button
+            className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
             onClick={handleSubmit}
             disabled={isLoading || !selectedQuestionId}
           >
             {isLoading ? 'กำลังสร้างคำตอบ...' : 'ส่งคำตอบ'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

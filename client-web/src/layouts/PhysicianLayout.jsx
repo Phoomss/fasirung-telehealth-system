@@ -6,13 +6,15 @@ import Footer from '../components/Footer'
 
 const PhysicianLayout = () => {
     return (
-        <div className='wrapper'>
-            <Header />
+        <div className="min-h-screen bg-slate-50 text-slate-900">
             <SideNav />
-            <div className="content-wrapper">
+            <div className="min-h-screen lg:pl-72">
+                <Header />
+                <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 <Outlet />
+                </main>
+                <Footer />
             </div>
-            <Footer />
         </div>
     )
 }
