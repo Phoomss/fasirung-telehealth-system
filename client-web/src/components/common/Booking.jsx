@@ -1,6 +1,8 @@
 import React from 'react';
 import useBookings from '../../hooks/useBookings';
 import { Table } from '../ui/Table';
+import { Droplet, MessageSquare } from 'lucide-react';
+import { Badge } from '../ui/Badge';
 
 const Booking = () => {
   const {
@@ -41,9 +43,15 @@ const Booking = () => {
     {
       header: 'ประเภทการนัดหมาย',
       accessor: (item) => (
-        <span className={`badge ${item.booking_type === 'bloodTest' ? 'bg-info text-dark' : 'bg-primary'}`}>
-          {item.booking_type === 'bloodTest' ? 'จองคิวเจาะเลือด' : 'จองคิวปรึกษา'}
-        </span>
+        item.booking_type === 'bloodTest' ? (
+          <Badge variant="sky" icon={<Droplet size={12} className="stroke-[2.5]" />}>
+            จองคิวเจาะเลือด
+          </Badge>
+        ) : (
+          <Badge variant="emerald" icon={<MessageSquare size={12} className="stroke-[2.5]" />}>
+            จองคิวปรึกษา
+          </Badge>
+        )
       ),
       width: '200px'
     },

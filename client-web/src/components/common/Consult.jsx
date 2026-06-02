@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import caseService from './../../service/caseService';
 import Swal from 'sweetalert2';
+import { CheckCircle2 } from 'lucide-react';
+import { Badge } from '../ui/Badge';
 
 const Consult = () => {
   const [cases, setCases] = useState([]);
@@ -8,13 +10,13 @@ const Consult = () => {
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [searchStatus, setSearchStatus] = useState('');  // Corrected searchStatus name
+  const [searchStatus, setSearchStatus] = useState('');
 
   const fetchCase = async () => {
     try {
       const res = await caseService.caseList();
       setCases(res.data.data);
-      setFilteredCase(res.data.data);  // Initial filteredCase set to all cases
+      setFilteredCase(res.data.data);
     } catch (error) {
       setError('Error fetching cases');
     }
@@ -37,14 +39,13 @@ const Consult = () => {
   };
 
   const handleSearch = () => {
-    // Filter cases based on selected searchStatus
     if (searchStatus === '') {
-      setFilteredCase(cases);  // If no status selected, show all cases
+      setFilteredCase(cases);
     } else {
       const filtered = cases.filter(caseItem => caseItem.case_status === searchStatus);
       setFilteredCase(filtered);
     }
-    setCurrentPage(1); // Reset to first page after filtering
+    setCurrentPage(1);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -66,8 +67,8 @@ const Consult = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await caseService.deleteCase(caseId);  // เรียก API เพื่อลบเคส
-        const res = await caseService.caseList();  // ดึงข้อมูลเคสที่อัปเดต
+        await caseService.deleteCase(caseId);
+        const res = await caseService.caseList();
         setCases(res.data.data);
         setFilteredCase(res.data.data);
 
@@ -78,79 +79,124 @@ const Consult = () => {
     }
   };
 
+  const getStatusBadge = (status) => {
+    if (status === 'accepting') {
+      return (
+        <Badge variant="amber" dot={true} pulsing={true}>
+          กำลังดำเนินการ
+        </Badge>
+      );
+    }
+    return (
+      <Badge variant="emerald" icon={<CheckCircle2 size={12} className="stroke-[2.5]" />}>
+        ปรึกษาเสร็จสิ้น
+      </Badge>
+    );
+  };
+
   return (
     <div className="tb-assment-response mt-3">
-      {error && <div className="alert alert-danger">{error}</div>}
+      {error && <div className="p-3 mb-4 text-sm text-rose-700 bg-rose-50 border border-rose-100 rounded-lg">{error}</div>}
 
-      <div className="mb-3">
-        <label htmlFor="searchStatus" className="form-label">ค้นหาตามสถานะเคส:</label>
+      <div className="mb-4">
+        <label htmlFor="searchStatus" className="block text-sm font-semibold text-gray-700 mb-1 text-start">ค้นหาตามสถานะเคส:</label>
         <select
           id="searchStatus"
-          className="form-select"
+          className="form-select w-full max-w-xs border border-gray-300 rounded-[var(--radius-interactive)] focus:ring-1 focus:ring-[var(--color-brand-500)] focus:border-[var(--color-brand-500)] shadow-sm bg-white p-2"
           value={searchStatus}
           onChange={(e) => {
             setSearchStatus(e.target.value);
-            handleSearch(); // Call handleSearch when status is changed
+            handleSearch();
           }}
         >
           <option value="">ทั้งหมด</option>
-          <option value="completed">รับเคส</option>
-          <option value="accepting">รับเข้าปรึกษาแล้ว</option>
+          <option value="accepting">กำลังดำเนินการ</option>
+          <option value="completed">ปรึกษาเสร็จสิ้น</option>
         </select>
       </div>
 
-      <div className="table-responsive">
-        <table className="table table-bordered table-gray table-striped text-center">
-          <thead>
+      <div className="table-responsive rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden">
+        <table className="w-full text-left text-sm text-slate-600 border-collapse">
+          <thead className="bg-slate-50/70 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200">
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">ผู้จองเข้าปรึกษา</th>
-              <th scope="col">เจ้าหน้าที่รับเคส</th>
-              <th scope="col">เจ้าหน้าที่ให้คำปรึกษา</th>
-              <th scope="col">สถานะเคส</th>
-              <th scope="col">จัดการ</th>
+              <th scope="col" className="px-6 py-4 text-center">#</th>
+              <th scope="col" className="px-6 py-4">ผู้จองเข้าปรึกษา</th>
+              <th scope="col" className="px-6 py-4">เจ้าหน้าที่รับเคส</th>
+              <th scope="col" className="px-6 py-4">เจ้าหน้าที่ให้คำปรึกษา</th>
+              <th scope="col" className="px-6 py-4 text-center">สถานะเคส</th>
+              <th scope="col" className="px-6 py-4 text-center">จัดการ</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100">
             {currentCases.length > 0 ? (
               currentCases.map((caseItem, index) => (
-                <tr key={caseItem.id}>
-                  <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                  <td>{caseItem.booking.user.title} {caseItem.booking.user.full_name}</td>
-                  <td>{caseItem.officer.title} {caseItem.officer.full_name}</td>
-                  <td>{caseItem.physician.title} {caseItem.physician.full_name}</td>
-                  <td>{caseItem.case_status === 'accepting' ? 'รับเคส' : 'รับเข้าปรึกษาแล้ว'}</td>
-                  <td>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(caseItem.id)}>ลบ</button>
+                <tr key={caseItem.id} className="hover:bg-slate-50/50 transition duration-150">
+                  <td className="px-6 py-4 text-center font-medium text-slate-400">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  <td className="px-6 py-4 font-semibold text-slate-900">{caseItem.booking.user.title} {caseItem.booking.user.full_name}</td>
+                  <td className="px-6 py-4 font-medium text-slate-600">{caseItem.officer.title} {caseItem.officer.full_name}</td>
+                  <td className="px-6 py-4 font-medium text-slate-600">{caseItem.physician.title} {caseItem.physician.full_name}</td>
+                  <td className="px-6 py-4 text-center">{getStatusBadge(caseItem.case_status)}</td>
+                  <td className="px-6 py-4 text-center">
+                    <button 
+                      className="inline-flex items-center justify-center rounded-lg bg-rose-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-rose-700 hover:scale-[1.02] active:scale-[0.98] transition cursor-pointer"
+                      onClick={() => handleDelete(caseItem.id)}
+                    >
+                      ลบข้อมูล
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center">ไม่มีข้อมูลการประเมิน</td>
+                <td colSpan="6" className="px-6 py-10 text-center text-slate-400 font-medium">ไม่มีข้อมูลการประเมินในระบบ</td>
               </tr>
             )}
           </tbody>
         </table>
-      </div>
 
-      {filteredCase.length > 0 && (
-        <nav aria-label="Page navigation example">
-          <ul className="pagination justify-content-end">
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={handlePreviousPage}>ก่อนหน้า</button>
-            </li>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                <button className="page-link" onClick={() => handlePageClick(index + 1)}>{index + 1}</button>
+        {/* Pagination */}
+        {filteredCase.length > 0 && (
+          <nav aria-label="Page navigation" className="flex items-center justify-between border-t border-slate-100 bg-white px-6 py-4 flex-wrap gap-4">
+            <div className="text-xs text-slate-500 font-medium">
+              แสดงรายการที่ {indexOfFirstItem + 1} ถึง {Math.min(indexOfLastItem, filteredCase.length)} จากทั้งหมด {filteredCase.length} รายการ
+            </div>
+            <ul className="flex items-center gap-1.5">
+              <li>
+                <button 
+                  className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                >
+                  ก่อนหน้า
+                </button>
               </li>
-            ))}
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={handleNextPage}>ถัดไป</button>
-            </li>
-          </ul>
-        </nav>
-      )}
+              {Array.from({ length: totalPages }, (_, index) => (
+                <li key={index}>
+                  <button 
+                    className={`inline-flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold cursor-pointer transition ${
+                      currentPage === index + 1 
+                        ? 'bg-sky-600 text-white shadow-xs' 
+                        : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                    onClick={() => handlePageClick(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+              <li>
+                <button 
+                  className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  ถัดไป
+                </button>
+              </li>
+            </ul>
+          </nav>
+        )}
+      </div>
     </div>
   );
 };

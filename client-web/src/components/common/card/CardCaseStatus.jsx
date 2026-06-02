@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import caseService from './../../../service/caseService';
+import { Badge } from '../../ui/Badge';
 
 const CardCaseStatus = () => {
     const [count, setCount] = useState([]);
@@ -20,8 +21,8 @@ const CardCaseStatus = () => {
     const acceptingCount = count.find(item => item.case_status === 'accepting')?._count?.case_status || 0;
 
     const cards = [
-        { title: 'รับเคส (กำลังดำเนินการ)', value: acceptingCount, color: 'text-amber-600 bg-amber-50 border-amber-100', desc: 'อยู่ระหว่างดำเนินการ' },
-        { title: 'รับเข้าปรึกษาแล้ว (สำเร็จ)', value: completedCount, color: 'text-emerald-600 bg-emerald-50 border-emerald-100', desc: 'เสร็จสิ้นการบริการ' }
+        { title: 'รับเคส (กำลังดำเนินการ)', value: acceptingCount, variant: 'amber', desc: 'อยู่ระหว่างดำเนินการ' },
+        { title: 'รับเข้าปรึกษาแล้ว (สำเร็จ)', value: completedCount, variant: 'emerald', desc: 'เสร็จสิ้นการบริการ' }
     ];
 
     return (
@@ -31,9 +32,9 @@ const CardCaseStatus = () => {
                     <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{card.title}</p>
                     <div className="mt-4 flex items-baseline justify-between">
                         <span className="text-3xl font-extrabold text-slate-900 tracking-tight">{card.value}</span>
-                        <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${card.color} border`}>
+                        <Badge variant={card.variant}>
                             {card.desc}
-                        </span>
+                        </Badge>
                     </div>
                 </div>
             ))}

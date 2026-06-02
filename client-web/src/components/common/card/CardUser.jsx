@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import userService from './../../../service/userService';
+import { Badge } from '../../ui/Badge';
 
 const CardUser = () => {
     const [count, setCount] = useState([]);
@@ -23,10 +24,10 @@ const CardUser = () => {
     const userCount = count.find(item => item.role === 'USER')?._count?.role || 0;
 
     const cards = [
-        { title: 'ผู้ใช้งานระบบทั้งหมด', value: totalUsers, color: 'text-sky-600 bg-sky-50 border-sky-100', desc: 'ยอดบัญชีในระบบ' },
-        { title: 'ผู้ใช้งาน', value: userCount, color: 'text-emerald-600 bg-emerald-50 border-emerald-100', desc: 'ผู้รับบริการทั่วไป' },
-        { title: 'เจ้าหน้าที่', value: officerCount, color: 'text-amber-600 bg-amber-50 border-amber-100', desc: 'เจ้าหน้าที่ควบคุมระบบ' },
-        { title: 'เจ้าหน้าที่ให้คำปรึกษา', value: physicianCount, color: 'text-violet-600 bg-violet-50 border-violet-100', desc: 'ผู้เชี่ยวชาญให้คำแนะนำ' }
+        { title: 'ผู้ใช้งานระบบทั้งหมด', value: totalUsers, variant: 'sky', desc: 'ยอดบัญชีในระบบ' },
+        { title: 'ผู้ใช้งาน', value: userCount, variant: 'emerald', desc: 'ผู้รับบริการทั่วไป' },
+        { title: 'เจ้าหน้าที่', value: officerCount, variant: 'amber', desc: 'เจ้าหน้าที่ควบคุมระบบ' },
+        { title: 'เจ้าหน้าที่ให้คำปรึกษา', value: physicianCount, variant: 'violet', desc: 'ผู้เชี่ยวชาญให้คำแนะนำ' }
     ];
 
     return (
@@ -36,9 +37,9 @@ const CardUser = () => {
                     <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{card.title}</p>
                     <div className="mt-4 flex items-baseline justify-between">
                         <span className="text-3xl font-extrabold text-slate-900 tracking-tight">{card.value}</span>
-                        <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${card.color} border`}>
+                        <Badge variant={card.variant}>
                             {card.desc}
-                        </span>
+                        </Badge>
                     </div>
                 </div>
             ))}

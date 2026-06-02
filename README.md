@@ -1,4 +1,4 @@
-# Fasirung Telehealth System
+# Fasirung Telehealth System 🏥✨
 
 A full-stack, enterprise-grade digital health consultation and appointment booking platform. The project is organized as a monorepo consisting of a highly secure Express database backend, an administrative React web dashboard, and a patient-facing React Native mobile application.
 
@@ -55,14 +55,15 @@ The system workspace is divided into three primary projects:
 ```
 fasirung-telehealth-system/
 ├── server/                 # Express backend server with Prisma ORM
-│   ├── prisma/             # Database schemas and migrations
+│   ├── prisma/             # Database schemas, migrations, and seed engines
 │   └── src/                # Backend source code (Services, Controllers, Routes)
-├── client-web/             # React (Vite) administration web dashboard
-│   ├── src/components/     # UI Components and reusable tables
-│   ├── src/hooks/          # Custom React hooks (state encapsulation)
-│   └── src/pages/          # Admin, Officer, and Counselor pages
+├── client-web/             # React (Vite/Tailwind) administrative web dashboard
+│   ├── src/components/     # UI Components (Sidebars, Tables, Cards, Modals)
+│   ├── src/hooks/          # Custom React hooks encapsulating business logic
+│   ├── src/pages/          # Admin, Officer, and Physician portals
+│   └── src/layouts/        # Layout managers supporting responsive mobile drawers
 └── client-app/             # React Native (Expo) patient mobile app
-    ├── screens/            # Native layouts (Home, Profile, Bookings, Assessment)
+    ├── screens/            # Native screen layouts (Home, Profile, Bookings, Assessment)
     ├── hooks/              # High-performance mobile custom hooks
     └── services/           # Axios network endpoints
 ```
@@ -76,7 +77,7 @@ fasirung-telehealth-system/
 | **Backend Server** | **Node.js** & **Express** | Service-Repository Pattern, Centralized Error Handling. |
 | **Database ORM** | **Prisma ORM** | Schema safety, relational links, and transaction integrity. |
 | **Database** | **MySQL** | ACID compliant relational storage for secure patient records. |
-| **Web Client** | **React** (Vite) | Role-based portal, Tailwind/Vanilla CSS, Custom State Hooks. |
+| **Web Client** | **React** (Vite + Tailwind v4) | Role-based portal, Custom Hooks, Modern HSL design system. |
 | **Mobile Client** | **React Native** (Expo) | Native components, virtualized listings, device caching. |
 
 ---
@@ -84,27 +85,58 @@ fasirung-telehealth-system/
 ## 🔒 Relational Database Schema (`Prisma`)
 
 The platform handles medical consulting workflows via these primary models:
-* **`User`**: Accounts with role-based auth (`ADMIN`, `USER`, `OFFICER`, `COUNSELOR`).
-* **`Booking`**: Appointment structures supporting `bloodTest` and `consult` types.
+* **`User`**: Accounts with role-based auth (`ADMIN`, `USER`, `OFFICER`, `PHYSICIAN` / `COUNSELOR`).
+* **`Booking`**: Appointment structures supporting `bloodTest` (ตรวจเลือด) and `consult` (จองคิวปรึกษา) types.
 * **`Case`**: Active consults linking a `Booking` to a handling `Officer` and a treating `Physician`.
-* **`Question`**, **`Answer`**, **`Response`**: A questionnaire engine supporting risk assessments.
-* **`Content`**: Articles, media, and medical guidelines published by staff.
+* **`Question`**, **`Answer`**, **`Response`**: Questionnaire engine supporting risk and diagnostics assessments.
+* **`Content`**: Educational medical articles, guidelines, and advisories published by staff.
 
 ---
 
-## ⚡ Key Architectural Patterns Applied (Refactored Highlights)
+## ⚡ Key Visual & Architectural Refactoring Highlights
 
-This codebase has been refactored to conform to high-level, production-ready design practices:
+This codebase is designed and optimized using modern frontend architecture practices and visual design guidelines:
 
-1. **Service-Repository Pattern**: The API layer is split into **Controllers** (handling request parameters and JSON responses) and **Services** (handling query calculations and Prisma actions).
-2. **Centralized Error Middleware**: Manual try/catch blocks are replaced with a global Express handler (`errorHandler.js`) and custom `AppError` classes that log issues securely and translate SQL constraints cleanly.
-3. **Payload Optimization**: User queries omit password hashes in standard retrievals to maximize data security and reduce JSON transfer sizes.
-4. **React Custom Hook Decoupling**: All states, fetch cycles, page metrics, and modals are extracted into dedicated custom hooks (`useBookings.js`, `useContents.js`), leaving components to focus entirely on visual presentation.
-5. **Mobile View Virtualization**: The mobile booking summaries utilize React Native **`<FlatList>`** with memory-optimized rendering profiles to recycle layout nodes and eliminate scrolling lag.
+### 1. Premium Visual Redesign & HSL Color Tokens
+* Configured tailored **HSL-based Theme Colors** in `index.css` (Sky Blue, Emerald Green, Amber, Violet) ensuring harmonious accents and a premium, clean medical aesthetics layout.
+* Modern typography with Outfit/Inter font weights, smooth scale transitions (`hover:scale-[1.01]`), and clean visual spacing rules.
+
+### 2. Centralized Badge Design System ([Badge.jsx](file:///client-web/src/components/ui/Badge.jsx))
+* Replaced outdated generic pills with a custom, highly styled `Badge` component that supports:
+  * Soft translucent background states (`bg-[color]/75 border-[color]/60`) with dynamic hover changes.
+  * Real-time pulsing status dots (`dot={true} pulsing={true}`) to indicate active/pending consultation cases.
+  * Native Lucide icons integrated inline (`Shield` for Admins, `UserCheck` for Officers, `Stethoscope` for Physicians, `Droplet` for Blood Tests, `MessageSquare` for Consultations, etc.).
+
+### 3. Fully Responsive Mobile drawer Layouts
+* Integrated responsive hamburger controls inside the admin/officer/physician headers.
+* Side menus transition seamlessly to togglable mobile slide-out drawers on smaller screens (`max-md` screen states), maintaining full navigation flexibility down to mobile viewports.
+
+### 4. Complete Thai Localization & Database Seeding
+* Fully localized the medical database content. The seed engine (`seed.js`) deploys native Thai diagnostic questions, answers, and medical information articles into the MySQL instance.
+* Solved strict SQL timestamps issues by standardizing DateTime columns to `DATETIME(3)`.
+
+### 5. Custom Hook State Encapsulation
+* Extracted state hooks (e.g. `useBookings.js`, `useContents.js`) from visual components, isolating data mutations, query parameters, search states, and pagination from UI presentation.
 
 ---
 
-## 🚀 Getting Started
+## 🐳 Dockerized Local Development (Recommended)
+
+The system is fully containerized using Docker Compose. Start all services (Database, API, Web Dashboard, Mobile metro bundler) with a single command:
+
+```bash
+docker-compose up --build -d
+```
+
+### Port Mapping Summary
+* **MySQL Database**: `3306` (Credentials: `telehealth_user` / `user_secure_password`)
+* **REST API Server**: `http://localhost:8080`
+* **Administrative Web Portal**: `http://localhost:3000`
+* **Mobile Metro Bundler**: `http://localhost:8081`
+
+---
+
+## 🚀 Manual Getting Started
 
 ### 1. Setup the Backend Server
 1. Navigate to the server folder:
@@ -118,14 +150,15 @@ This codebase has been refactored to conform to high-level, production-ready des
 3. Configure your environment variables in `.env`:
    ```env
    PORT=8080
-   DATABASE_URL="mysql://username:password@localhost:3306/telehealth_db"
-   JWT_SECRET="your_secure_jwt_secret_token"
+   DATABASE_URL="mysql://telehealth_user:user_secure_password@localhost:3306/telehealth_db"
+   JWT_SECRET="your_secure_jwt_secret_token_here"
    ```
-4. Deploy the Prisma database migration:
+4. Deploy the database migrations and seed default data:
    ```bash
    npx prisma migrate dev
+   npx prisma db seed
    ```
-5. Seed or run the server in development mode (which auto-creates the default `admin` profile):
+5. Run the server in development mode:
    ```bash
    npm run dev
    ```
@@ -139,7 +172,7 @@ This codebase has been refactored to conform to high-level, production-ready des
    ```bash
    npm install
    ```
-3. Boot up the Vite dev server:
+3. Boot up the Vite development server:
    ```bash
    npm run dev
    ```
@@ -157,7 +190,6 @@ This codebase has been refactored to conform to high-level, production-ready des
    ```bash
    npx expo start
    ```
-4. Scan the QR code using your physical iOS/Android camera, or press `a` (Android) / `i` (iOS) to boot inside a emulator.
 
 ---
 

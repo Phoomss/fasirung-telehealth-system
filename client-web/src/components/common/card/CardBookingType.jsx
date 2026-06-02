@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import bookingService from './../../../service/bookingService';
+import { Badge } from '../../ui/Badge';
 
 const CardBookingType = () => {
     const [count, setCount] = useState([]);
@@ -20,8 +21,8 @@ const CardBookingType = () => {
     const consultCount = count.find(item => item.booking_type === 'consult')?._count?.booking_type || 0;
 
     const cards = [
-        { title: 'จองคิวเจาะเลือด', value: bloodTestCount, color: 'text-sky-600 bg-sky-50 border-sky-100', desc: 'รายการนัดตรวจวิเคราะห์' },
-        { title: 'จองคิวปรึกษา', value: consultCount, color: 'text-emerald-600 bg-emerald-50 border-emerald-100', desc: 'รายการนัดแนะพูดคุย' }
+        { title: 'จองคิวเจาะเลือด', value: bloodTestCount, variant: 'sky', desc: 'รายการนัดตรวจวิเคราะห์' },
+        { title: 'จองคิวปรึกษา', value: consultCount, variant: 'emerald', desc: 'รายการนัดแนะพูดคุย' }
     ];
 
     return (
@@ -31,9 +32,9 @@ const CardBookingType = () => {
                     <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{card.title}</p>
                     <div className="mt-4 flex items-baseline justify-between">
                         <span className="text-3xl font-extrabold text-slate-900 tracking-tight">{card.value}</span>
-                        <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${card.color} border`}>
+                        <Badge variant={card.variant}>
                             {card.desc}
-                        </span>
+                        </Badge>
                     </div>
                 </div>
             ))}

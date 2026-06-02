@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import userService from './../../service/userService';
 import { useNavigate } from 'react-router-dom';
+import { Shield, UserCheck, Stethoscope, User as UserIcon } from 'lucide-react';
+import { Badge } from '../ui/Badge';
 
 const User = () => {
   const [users, setUsers] = useState([]);
@@ -49,14 +51,30 @@ const User = () => {
   const getRoleBadge = (role) => {
     switch (role) {
       case 'ADMIN':
-        return <span className="inline-flex rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200 border border-sky-100">ผู้ดูแลระบบ</span>;
+        return (
+          <Badge variant="sky" icon={<Shield size={12} className="stroke-[2.5]" />}>
+            ผู้ดูแลระบบ
+          </Badge>
+        );
       case 'OFFICER':
-        return <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 border border-emerald-100">เจ้าหน้าที่</span>;
+        return (
+          <Badge variant="emerald" icon={<UserCheck size={12} className="stroke-[2.5]" />}>
+            เจ้าหน้าที่
+          </Badge>
+        );
       case 'COUNSELOR':
       case 'PHYSICIAN':
-        return <span className="inline-flex rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700 ring-1 ring-violet-200 border border-violet-100">ผู้ให้คำปรึกษา</span>;
+        return (
+          <Badge variant="violet" icon={<Stethoscope size={12} className="stroke-[2.5]" />}>
+            ผู้ให้คำปรึกษา
+          </Badge>
+        );
       default:
-        return <span className="inline-flex rounded-full bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-slate-200 border border-slate-100">ผู้ใช้งานทั่วไป</span>;
+        return (
+          <Badge variant="slate" icon={<UserIcon size={12} className="stroke-[2.5]" />}>
+            ผู้ใช้งานทั่วไป
+          </Badge>
+        );
     }
   };
 
