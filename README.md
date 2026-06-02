@@ -41,7 +41,7 @@ The system is designed with a strict **Separation of Concerns** using a decouple
   │                        DATA LAYER                        │
   │                                                          │
   │                  ┌───────────────────┐                   │
-  │                  │  MySQL Database   │                   │
+  │                  │ PostgreSQL Database │                 │
   │                  └───────────────────┘                   │
   └──────────────────────────────────────────────────────────┘
 ```
@@ -76,7 +76,7 @@ fasirung-telehealth-system/
 | :--- | :--- | :--- |
 | **Backend Server** | **Node.js** & **Express** | Service-Repository Pattern, Centralized Error Handling. |
 | **Database ORM** | **Prisma ORM** | Schema safety, relational links, and transaction integrity. |
-| **Database** | **MySQL** | ACID compliant relational storage for secure patient records. |
+| **Database** | **PostgreSQL** | ACID compliant relational storage for secure patient records. |
 | **Web Client** | **React** (Vite + Tailwind v4) | Role-based portal, Custom Hooks, Modern HSL design system. |
 | **Mobile Client** | **React Native** (Expo) | Native components, virtualized listings, device caching. |
 
@@ -112,7 +112,7 @@ This codebase is designed and optimized using modern frontend architecture pract
 * Side menus transition seamlessly to togglable mobile slide-out drawers on smaller screens (`max-md` screen states), maintaining full navigation flexibility down to mobile viewports.
 
 ### 4. Complete Thai Localization & Database Seeding
-* Fully localized the medical database content. The seed engine (`seed.js`) deploys native Thai diagnostic questions, answers, and medical information articles into the MySQL instance.
+* Fully localized the medical database content. The seed engine (`seed.js`) deploys native Thai diagnostic questions, answers, and medical information articles into the PostgreSQL instance.
 * Solved strict SQL timestamps issues by standardizing DateTime columns to `DATETIME(3)`.
 
 ### 5. Custom Hook State Encapsulation
@@ -129,7 +129,7 @@ docker-compose up --build -d
 ```
 
 ### Port Mapping Summary
-* **MySQL Database**: `3306` (Credentials: `telehealth_user` / `user_secure_password`)
+* **PostgreSQL Database**: `5435` (Credentials: `telehealth_user` / `user_secure_password`)
 * **REST API Server**: `http://localhost:8080`
 * **Administrative Web Portal**: `http://localhost:3000`
 * **Mobile Metro Bundler**: `http://localhost:8081`
@@ -150,7 +150,7 @@ docker-compose up --build -d
 3. Configure your environment variables in `.env`:
    ```env
    PORT=8080
-   DATABASE_URL="mysql://telehealth_user:user_secure_password@localhost:3306/telehealth_db"
+   DATABASE_URL="postgresql://telehealth_user:user_secure_password@localhost:5435/telehealth_db?schema=public"
    JWT_SECRET="your_secure_jwt_secret_token_here"
    ```
 4. Deploy the database migrations and seed default data:

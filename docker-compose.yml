@@ -2,23 +2,22 @@ version: '3.8'
 
 services:
   # ==========================================
-  # 1. Database Service (MySQL)
+  # 1. Database Service (PostgreSQL)
   # ==========================================
   db:
-    image: mysql:8.0
+    image: postgres:15-alpine
     container_name: telehealth_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root_secure_password
-      MYSQL_DATABASE: telehealth_db
-      MYSQL_USER: telehealth_user
-      MYSQL_PASSWORD: user_secure_password
+      POSTGRES_USER: telehealth_user
+      POSTGRES_PASSWORD: user_secure_password
+      POSTGRES_DB: telehealth_db
     ports:
-      - "3306:3306"
+      - "5435:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p=root_secure_password"]
+      test: ["CMD-SHELL", "pg_isready -U telehealth_user -d telehealth_db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -36,7 +35,7 @@ services:
       - "8080:8080"
     environment:
       - PORT=8080
-      - DATABASE_URL=mysql://telehealth_user:user_secure_password@db:3306/telehealth_db
+      - DATABASE_URL=postgresql://telehealth_user:user_secure_password@db:5432/telehealth_db?schema=public
       - JWT_SECRET=telehealth_jwt_production_secret_token_2026
     depends_on:
       db:
@@ -77,5 +76,5 @@ services:
       - api
 
 volumes:
-  mysql_data:
+  pg_data:
     driver: local
