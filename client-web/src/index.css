@@ -287,4 +287,22 @@
   .fa {
     @apply hidden;
   }
+
+  /* Modern Responsive Breadcrumbs */
+  .breadcrumb {
+    @apply flex items-center gap-1.5 text-xs font-semibold text-slate-400 tracking-wider uppercase;
+  }
+
+  .breadcrumb-item a {
+    @apply text-sky-600 hover:text-sky-700 transition-colors font-bold;
+  }
+
+  .breadcrumb-item:not(.active)::after {
+    content: "/";
+    @apply ml-1.5 text-slate-300 font-normal;
+  }
+
+  .breadcrumb-item.active {
+    @apply text-slate-400 font-medium;
+  }
 }

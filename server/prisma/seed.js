@@ -7,72 +7,72 @@ const password = 'password123';
 
 const users = [
   {
-    title: 'Admin',
-    full_name: 'System Administrator',
+    title: 'ผู้ดูแล',
+    full_name: 'ผู้ดูแลระบบสูงสุด',
     phone: '0000000000',
     age: 30,
     username: 'admin',
     role: 'ADMIN',
   },
   {
-    title: 'Mr.',
-    full_name: 'Somchai Wattanakul',
+    title: 'นาย',
+    full_name: 'สมชาย วัฒนกุล',
     phone: '0812345678',
     age: 42,
     username: 'somchai',
     role: 'USER',
   },
   {
-    title: 'Ms.',
-    full_name: 'Siriporn Kanya',
+    title: 'นางสาว',
+    full_name: 'ศิริพร กันยา',
     phone: '0823456789',
     age: 35,
     username: 'siriporn',
     role: 'USER',
   },
   {
-    title: 'Mrs.',
-    full_name: 'Naree Chaiyo',
+    title: 'นาง',
+    full_name: 'นารี ไชโย',
     phone: '0834567890',
     age: 51,
     username: 'naree',
     role: 'USER',
   },
   {
-    title: 'Mr.',
-    full_name: 'Anan Srisuk',
+    title: 'นาย',
+    full_name: 'อนันต์ ศรีสุข',
     phone: '0845678901',
     age: 28,
     username: 'anan',
     role: 'USER',
   },
   {
-    title: 'Ms.',
-    full_name: 'Kanda Meesri',
+    title: 'นางสาว',
+    full_name: 'กานดา มีศรี',
     phone: '0856789012',
     age: 31,
     username: 'officer.kanda',
     role: 'OFFICER',
   },
   {
-    title: 'Mr.',
-    full_name: 'Preecha Boonmee',
+    title: 'นาย',
+    full_name: 'ปรีชา บุญมี',
     phone: '0867890123',
     age: 39,
     username: 'officer.preecha',
     role: 'OFFICER',
   },
   {
-    title: 'Dr.',
-    full_name: 'Dr. Mali Ratanasri',
+    title: 'พญ.',
+    full_name: 'พญ. มะลิ รัตนศรี',
     phone: '0878901234',
     age: 45,
     username: 'dr.mali',
     role: 'COUNSELOR',
   },
   {
-    title: 'Dr.',
-    full_name: 'Dr. Krit Noppakul',
+    title: 'นพ.',
+    full_name: 'นพ. กฤษณ์ นพกุล',
     phone: '0889012345',
     age: 48,
     username: 'dr.krit',
@@ -82,47 +82,47 @@ const users = [
 
 const contents = [
   {
-    content_name: 'Preparing for a Blood Test',
+    content_name: 'การเตรียมตัวสำหรับการเจาะเลือด',
     content_detail:
-      'Fast for 8-12 hours if instructed, drink water normally, and bring your current medication list to the appointment.',
+      'งดน้ำและอาหาร 8-12 ชั่วโมงตามคำแนะนำของแพทย์ (สามารถดื่มน้ำเปล่าได้ตามปกติ) และนำรายการยาที่ทานอยู่มาแสดงในวันนัดหมายด้วย',
   },
   {
-    content_name: 'When to Request an Online Consultation',
+    content_name: 'เมื่อไหร่ควรขอรับบริการปรึกษาออนไลน์',
     content_detail:
-      'Use telehealth for follow-up care, minor symptoms, medication questions, and reviewing lab results. Seek emergency care for severe or sudden symptoms.',
+      'ใช้บริการพบแพทย์ออนไลน์สำหรับการติดตามอาการ อาการเจ็บป่วยทั่วไปเล็กน้อย สอบถามเรื่องการใช้ยา หรือฟังการรายงานวิเคราะห์ผลแล็บ',
   },
   {
-    content_name: 'Daily Wellness Checklist',
+    content_name: 'รายการตรวจสอบสุขภาพประจำวัน',
     content_detail:
-      'Track sleep, water intake, movement, stress level, and medication adherence to help clinicians understand your health trends.',
+      'บันทึกพฤติกรรมการนอนหลับ ปริมาณการดื่มน้ำ การขยับออกกำลังกาย ระดับความเครียด และการทานยา เพื่อช่วยให้แพทย์ประเมินแนวโน้มสุขภาพได้แม่นยำขึ้น',
   },
   {
-    content_name: 'Understanding Consultation Status',
+    content_name: 'ทำความเข้าใจสถานะการปรึกษาคิว',
     content_detail:
-      'Accepting cases are being reviewed by clinical staff. Completed cases have finished consultation and can be reviewed in your history.',
+      'เคสที่รับการรักษาอยู่กำลังได้รับการตรวจสอบโดยพยาบาลหรือเจ้าหน้าที่ ส่วนเคสที่เสร็จสิ้นสามารถเปิดดูประวัติและคำแนะนำของแพทย์ย้อนหลังได้',
   },
 ];
 
 const questionnaire = [
   {
-    ques_name: 'How would you rate your current energy level?',
-    answers: ['High', 'Moderate', 'Low', 'Very low'],
+    ques_name: 'คุณรู้สึกว่าระดับพลังงานในร่างกายของคุณตอนนี้เป็นอย่างไร?',
+    answers: ['ปกติ/กระปรี้กระเปร่า', 'ปานกลาง', 'เหนื่อยง่าย', 'อ่อนเพลียมาก'],
   },
   {
-    ques_name: 'Have you had a fever in the past 48 hours?',
-    answers: ['No', 'Yes, mild', 'Yes, high fever'],
+    ques_name: 'คุณมีอาการไข้ในช่วง 48 ชั่วโมงที่ผ่านมาหรือไม่?',
+    answers: ['ไม่มีไข้', 'มีไข้ต่ำๆ', 'มีไข้สูง'],
   },
   {
-    ques_name: 'How often did you exercise this week?',
-    answers: ['4 or more days', '1-3 days', 'Not this week'],
+    ques_name: 'สัปดาห์นี้คุณได้ออกกำลังกายบ่อยแค่ไหน?',
+    answers: ['4 วันขึ้นไป', '1-3 วัน', 'ไม่ได้ออกกำลังกายเลย'],
   },
   {
-    ques_name: 'Are you currently taking prescribed medication?',
-    answers: ['No', 'Yes, taken as prescribed', 'Yes, missed some doses'],
+    ques_name: 'คุณกำลังรับประทานยาตามแพทย์สั่งอย่างต่อเนื่องหรือไม่?',
+    answers: ['ไม่ได้ทานยา', 'ทานครบตามแพทย์สั่ง', 'ลืมทานบ้างบางมื้อ'],
   },
   {
-    ques_name: 'What is your primary reason for using the service today?',
-    answers: ['Blood test booking', 'General consultation', 'Follow-up consultation', 'Health education'],
+    ques_name: 'จุดประสงค์หลักในการขอรับบริการของคุณวันนี้คืออะไร?',
+    answers: ['จองคิวตรวจเลือด', 'ปรึกษาปัญหาสุขภาพทั่วไป', 'ติดตามผลการรักษา', 'รับคำแนะนำด้านสุขภาพ'],
   },
 ];
 
@@ -130,31 +130,31 @@ const bookingFixtures = [
   {
     username: 'somchai',
     booking_type: 'bloodTest',
-    booking_detail: 'Annual health screening with fasting blood sugar and lipid profile.',
+    booking_detail: 'ตรวจสุขภาพประจำปี ตรวจระดับน้ำตาลและไขมันในเลือด (งดอาหารล่วงหน้า)',
     appointment: '2026-06-05T09:30:00.000Z',
   },
   {
     username: 'siriporn',
     booking_type: 'consult',
-    booking_detail: 'Follow-up consultation for recurring headache and sleep quality.',
+    booking_detail: 'ติดตามผลการรักษาและปรึกษาอาการปวดศีรษะเรื้อรัง รวมถึงคุณภาพการนอนหลับ',
     appointment: '2026-06-06T14:00:00.000Z',
   },
   {
     username: 'naree',
     booking_type: 'bloodTest',
-    booking_detail: 'HbA1c monitoring and kidney function blood test.',
+    booking_detail: 'ติดตามผลระดับน้ำตาลสะสม (HbA1c) และตรวจการทำงานของไต',
     appointment: '2026-06-07T10:15:00.000Z',
   },
   {
     username: 'anan',
     booking_type: 'consult',
-    booking_detail: 'General consultation for sore throat and fatigue.',
+    booking_detail: 'ปรึกษาปัญหาสุขภาพทั่วไปเนื่องจากมีอาการเจ็บคอและอ่อนเพลีย',
     appointment: '2026-06-08T11:00:00.000Z',
   },
   {
     username: 'somchai',
     booking_type: 'consult',
-    booking_detail: 'Review blood test results and receive lifestyle recommendations.',
+    booking_detail: 'พบแพทย์เพื่อฟังผลตรวจเลือดและขอรับคำแนะนำในการปรับเปลี่ยนพฤติกรรม',
     appointment: '2026-06-12T15:30:00.000Z',
   },
 ];
