@@ -3,6 +3,8 @@
 # ==========================================
 FROM node:20-alpine AS builder
 
+RUN apk add --no-cache openssl
+
 WORKDIR /usr/src/app
 
 # Copy dependency specifications
@@ -21,6 +23,8 @@ RUN npx prisma generate
 # STAGE 2: Production Environment
 # ==========================================
 FROM node:20-alpine
+
+RUN apk add --no-cache openssl
 
 WORKDIR /usr/src/app
 

@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -28,7 +29,7 @@ model Content {
   id             Int      @id @default(autoincrement())
   content_name   String
   content_detail String   @db.Text
-  createdAt      DateTime @default(now()) @db.Timestamp()
+  createdAt      DateTime @default(now())
 
   @@map("contents")
 }
@@ -42,7 +43,7 @@ model User {
   username  String   @unique @db.VarChar(100)
   password  String
   role      Role
-  createdAt DateTime @default(now()) @db.Timestamp()
+  createdAt DateTime @default(now())
 
   Case_officer   Case[]     @relation("OfficerCases")
   Case_physician Case[]     @relation("PhysicianCases")
@@ -57,8 +58,8 @@ model Booking {
   userId         Int
   booking_type   BookingType
   booking_detail String?     @db.Text
-  appointment    DateTime?   @default(now()) @db.Timestamp()
-  createdAt      DateTime    @default(now()) @db.Timestamp()
+  appointment    DateTime?   @default(now())
+  createdAt      DateTime    @default(now())
 
   Case Case[]
 
@@ -74,7 +75,7 @@ model Case {
   officerId   Int
   physicianId Int
   case_status CaseStatus
-  createdAt   DateTime   @default(now()) @db.Timestamp()
+  createdAt   DateTime   @default(now())
 
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   officer   User    @relation("OfficerCases", fields: [officerId], references: [id], onDelete: Cascade)
@@ -89,7 +90,7 @@ model Case {
 model Question {
   id        Int        @id @default(autoincrement())
   ques_name String     @unique
-  createdAt DateTime   @default(now()) @db.Timestamp()
+  createdAt DateTime   @default(now())
   Answer    Answer[]
   Response  Response[]
 
@@ -100,7 +101,7 @@ model Answer {
   id          Int      @id @default(autoincrement())
   questionId  Int
   answer_text String
-  createdAt   DateTime @default(now()) @db.Timestamp()
+  createdAt   DateTime @default(now())
 
   question Question   @relation(fields: [questionId], references: [id])
   Response Response[]
@@ -113,7 +114,7 @@ model Response {
   userId     Int
   questionId Int
   answerId   Int
-  createdAt  DateTime @default(now()) @db.Timestamp()
+  createdAt  DateTime @default(now())
 
   user     User     @relation(fields: [userId], references: [id])
   question Question @relation(fields: [questionId], references: [id])

@@ -17,8 +17,9 @@ const validateRequest = (schema) => {
 
       next();
     } catch (error) {
-      if (error.name === 'ZodError') {
-        const errorDetails = error.errors.map(err => ({
+      if (error.name === 'ZodError' || error.issues) {
+        const issues = error.issues || error.errors || [];
+        const errorDetails = issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }));

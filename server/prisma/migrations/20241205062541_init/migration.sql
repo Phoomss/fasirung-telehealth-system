@@ -3,7 +3,7 @@ CREATE TABLE `contents` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `content_name` VARCHAR(191) NOT NULL,
     `content_detail` TEXT NOT NULL,
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -18,7 +18,7 @@ CREATE TABLE `users` (
     `username` VARCHAR(100) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `role` ENUM('ADMIN', 'USER', 'OFFICER', 'COUNSELOR') NOT NULL,
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `users_phone_key`(`phone`),
     UNIQUE INDEX `users_username_key`(`username`),
@@ -31,8 +31,8 @@ CREATE TABLE `bookings` (
     `userId` INTEGER NOT NULL,
     `booking_type` ENUM('bloodTest', 'consult') NOT NULL,
     `booking_detail` TEXT NULL,
-    `appointment` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `appointment` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -44,7 +44,7 @@ CREATE TABLE `cases` (
     `officerId` INTEGER NOT NULL,
     `physicianId` INTEGER NOT NULL,
     `case_status` ENUM('completed', 'accepting') NOT NULL,
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -53,7 +53,7 @@ CREATE TABLE `cases` (
 CREATE TABLE `questions` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `ques_name` VARCHAR(191) NOT NULL,
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `questions_ques_name_key`(`ques_name`),
     PRIMARY KEY (`id`)
@@ -64,7 +64,7 @@ CREATE TABLE `answers` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `questionId` INTEGER NOT NULL,
     `answer_text` VARCHAR(191) NOT NULL,
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -75,7 +75,7 @@ CREATE TABLE `responses` (
     `userId` INTEGER NOT NULL,
     `questionId` INTEGER NOT NULL,
     `answerId` INTEGER NOT NULL,
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

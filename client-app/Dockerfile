@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 8081 19000 19001 19002
 
 # Run Expo development server
-CMD ["npx", "expo", "start", "--tunnel"]
+CMD ["npx", "expo", "start"]
