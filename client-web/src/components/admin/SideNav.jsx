@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import UserInfo from '../common/UserInfo';
 
-const SideNav = () => {
+const SideNav = ({ isOpen, onClose }) => {
     const navigate = useNavigate()
     const linkClass = ({ isActive }) =>
         `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition ${isActive
@@ -36,36 +36,59 @@ const SideNav = () => {
     }
 
     return (
-        <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-white lg:block">
-            <div className="flex h-full flex-col gap-4 px-4 py-5">
-                <div>
-                    <p className="text-lg font-bold text-slate-950">Fasirung</p>
-                    <p className="text-xs font-medium text-slate-500">Admin console</p>
+        <>
+            {/* Backdrop for mobile */}
+            {isOpen && (
+                <div 
+                    onClick={onClose}
+                    className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs transition-opacity lg:hidden"
+                />
+            )}
+
+            <aside className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 bg-white transition-transform duration-300 lg:z-40 lg:translate-x-0 ${
+                isOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}>
+                <div className="flex h-full flex-col gap-4 px-4 py-5">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-lg font-bold text-slate-950">Fasirung</p>
+                            <p className="text-xs font-medium text-slate-500">Admin console</p>
+                        </div>
+                        {/* Close button for mobile */}
+                        <button 
+                            onClick={onClose}
+                            className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 lg:hidden cursor-pointer"
+                        >
+                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <UserInfo />
+                    <nav className="flex-1 overflow-y-auto" onClick={() => { if (window.innerWidth < 1024) onClose(); }}>
+                        <ul className="space-y-1">
+                            <li className={sectionClass}>จัดการระบบ</li>
+                            <li><NavLink to='/admin/reservation' className={linkClass}><span>จอง</span><span>จัดการการจองคิว</span></NavLink></li>
+                            <li><NavLink to='/admin/consult' className={linkClass}><span>เคส</span><span>จัดการเคสคนเข้าปรึกษา</span></NavLink></li>
+                            <li className={sectionClass}>จัดการคอนเทนท์</li>
+                            <li><NavLink to='/admin/content' className={linkClass}><span>สื่อ</span><span>เนื้อหาคอนเทนท์</span></NavLink></li>
+                            <li><NavLink to='/admin/assessment/response' className={linkClass}><span>ตอบ</span><span>รายการตอบกลับ</span></NavLink></li>
+                            <li><NavLink to='/admin/assessment/question' className={linkClass}><span>ถาม</span><span>จัดการคำถาม</span></NavLink></li>
+                            <li><NavLink to='/admin/assessment/answer' className={linkClass}><span>เลือก</span><span>จัดการคำตอบ</span></NavLink></li>
+                            <li className={sectionClass}>จัดการข้อมูล</li>
+                            <li><NavLink to='/admin/user' className={linkClass}><span>คน</span><span>ข้อมูลผู้ใช้งาน</span></NavLink></li>
+                            <li><NavLink to='/admin/profile' className={linkClass}><span>ฉัน</span><span>ข้อมูลส่วนตัว</span></NavLink></li>
+                            <li className={sectionClass}>ออกจากระบบ</li>
+                            <li>
+                                <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50 cursor-pointer">
+                                    <span>ออก</span><span>ออกจากระบบ</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-                <UserInfo />
-                <nav className="flex-1 overflow-y-auto">
-                    <ul className="space-y-1">
-                        <li className={sectionClass}>จัดการระบบ</li>
-                        <li><NavLink to='/admin/reservation' className={linkClass}><span>จอง</span><span>จัดการการจองคิว</span></NavLink></li>
-                        <li><NavLink to='/admin/consult' className={linkClass}><span>เคส</span><span>จัดการเคสคนเข้าปรึกษา</span></NavLink></li>
-                        <li className={sectionClass}>จัดการคอนเทนท์</li>
-                        <li><NavLink to='/admin/content' className={linkClass}><span>สื่อ</span><span>เนื้อหาคอนเทนท์</span></NavLink></li>
-                        <li><NavLink to='/admin/assessment/response' className={linkClass}><span>ตอบ</span><span>รายการตอบกลับ</span></NavLink></li>
-                        <li><NavLink to='/admin/assessment/question' className={linkClass}><span>ถาม</span><span>จัดการคำถาม</span></NavLink></li>
-                        <li><NavLink to='/admin/assessment/answer' className={linkClass}><span>เลือก</span><span>จัดการคำตอบ</span></NavLink></li>
-                        <li className={sectionClass}>จัดการข้อมูล</li>
-                        <li><NavLink to='/admin/user' className={linkClass}><span>คน</span><span>ข้อมูลผู้ใช้งาน</span></NavLink></li>
-                        <li><NavLink to='/admin/profile' className={linkClass}><span>ฉัน</span><span>ข้อมูลส่วนตัว</span></NavLink></li>
-                        <li className={sectionClass}>ออกจากระบบ</li>
-                        <li>
-                            <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50">
-                                <span>ออก</span><span>ออกจากระบบ</span>
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </aside>
+            </aside>
+        </>
     )
 }
 
