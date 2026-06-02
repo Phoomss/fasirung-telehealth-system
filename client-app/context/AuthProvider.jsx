@@ -11,13 +11,20 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userToken, setUserToken] = useState(null); // สถานะของ token
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkToken = async () => {
-      const token = await AsyncStorage.getItem('userToken');
-      if (token) {
-        setIsAuthenticated(true);
-        setUserToken(token);
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        if (token) {
+          setIsAuthenticated(true);
+          setUserToken(token);
+        }
+      } catch (e) {
+        console.error("Error checking token: ", e);
+      } finally {
+        setIsLoading(false);
       }
     };
     checkToken();
@@ -36,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userToken, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, userToken, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

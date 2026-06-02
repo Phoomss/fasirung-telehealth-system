@@ -1,20 +1,19 @@
-import { View, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Alert, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Picker } from '@react-native-picker/picker'; // Import Picker
-import { assessmentStyle, styles } from '../constants/styles';
+import { Picker } from '@react-native-picker/picker';
 import userService from './../services/UserService';
 import assessmentService from './../services/assessmentService';
 import { useNavigation } from '@react-navigation/native';
+import { colors } from '../constants/theme';
 
 export default function AssessmentScreen() {
-  const [questions, setQuestions] = useState([]); // Store questions with their answers
-  const [selectedAnswers, setSelectedAnswers] = useState({}); // Track answers for each question
-  const [userId, setUserId] = useState(null); // Assume userId is set from auth context or prop
+  const [questions, setQuestions] = useState([]);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [userId, setUserId] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
 
   const navigation = useNavigation();
 
-  // Fetch all questions with answers on component mount
   useEffect(() => {
     fetchUserInfo();
     fetchQuestion();
@@ -24,21 +23,19 @@ export default function AssessmentScreen() {
     try {
       const res = await userService.userInfo();
       setUserInfo(res.data.data);
-      setUserId(res.data.data.id); // Assuming `id` is the user ID
+      setUserId(res.data.data.id);
     } catch (error) {
       console.log('Error fetching user info:', error);
     }
   };
 
-  // Fetch question data and associated answers for each question
   const fetchQuestion = async () => {
     try {
       const res = await assessmentService.questionList();
       const questionsData = res.data.data;
       
-      // Fetch answers for each question concurrently using Promise.all
       const questionsWithAnswers = await Promise.all(questionsData.map(async (question) => {
-        const answerRes = await assessmentService.searchAnswer(question.id); // Assuming question.id is the questionId
+        const answerRes = await assessmentService.searchAnswer(question.id);
         question.answerOptions = answerRes.data.data;
         return question;
       }));
@@ -49,7 +46,6 @@ export default function AssessmentScreen() {
     }
   };
 
-  // Handle answer selection
   const handleAnswerSelect = (questionId, answerId) => {
     setSelectedAnswers(prev => ({ ...prev, [questionId]: answerId }));
   };
@@ -60,35 +56,31 @@ export default function AssessmentScreen() {
       return;
     }
   
-    // เตรียมคำตอบรวมถึงข้อมูลผู้ใช้
     const responses = Object.entries(selectedAnswers).map(([questionId, answerId]) => ({
       userId,
       questionId,
       answerId,
     }));
   
-    // รวมข้อมูลผู้ใช้เข้าไปใน payload
     const dataToSubmit = {
       userId,
       userInfo,
       responses,
     };
   
-    // แสดงกล่องยืนยันก่อนส่ง
     Alert.alert(
       'ยืนยันการส่งคำตอบ',
       'คุณแน่ใจหรือไม่ว่าจะส่งคำตอบของคุณ?',
       [
         {
           text: 'ยกเลิก',
-          onPress: () => console.log('ยกเลิกการส่งคำตอบ'),
           style: 'cancel',
         },
         {
           text: 'ยืนยัน',
           onPress: async () => {
             try {
-              await assessmentService.createResponse(dataToSubmit); // ส่งข้อมูลทั้งหมดรวมถึงข้อมูลผู้ใช้
+              await assessmentService.createResponse(dataToSubmit);
               Alert.alert('สำเร็จ', 'ส่งคำตอบสำเร็จ', [
                 {
                   text: 'ตกลง',
@@ -102,48 +94,125 @@ export default function AssessmentScreen() {
           },
         },
       ],
-      { cancelable: false } // ป้องกันไม่ให้ปิดกล่องยืนยันหากคลิกนอกกล่อง
+      { cancelable: false }
     );
   };  
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.main}>
-        <View style={styles.servicesContainer}>
-          <Text style={assessmentStyle.headerText}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>
             โปรดบันทึกข้อมูลที่เป็นความจริงเพื่อใช้ในการประเมินความเสี่ยง
           </Text>
-          <Text style={assessmentStyle.descriptionText}>
-            ข้อมูลของท่านจะถูกเก็บเป็นความลับ
+          <Text style={styles.descriptionText}>
+            * ข้อมูลของท่านจะถูกเก็บเป็นความลับทางการแพทย์
           </Text>
+        </View>
 
-          {/* Render each question with answer options */}
-          {questions.map((question, index) => (
-            <View key={question.id} style={assessmentStyle.cardAss}>
-              <Text style={assessmentStyle.question}>
-                {index + 1}. {question.ques_name}
-              </Text>
+        {questions.map((question, index) => (
+          <View key={question.id} style={styles.cardAss}>
+            <Text style={styles.questionText}>
+              {index + 1}. {question.ques_name}
+            </Text>
 
-              {/* Render dropdown for answer selection */}
+            <View style={styles.pickerWrapper}>
               <Picker
                 selectedValue={selectedAnswers[question.id]}
                 onValueChange={(value) => handleAnswerSelect(question.id, value)}
-                style={assessmentStyle.dropdown}
+                style={styles.picker}
+                dropdownIconColor={colors.light.primary}
               >
-                <Picker.Item label="Select an answer" value={null} />
+                <Picker.Item label="เลือกคำตอบ..." value={null} color="#94A3B8" />
                 {question.answerOptions?.map((answer) => (
-                  <Picker.Item key={answer.id} label={answer.answer_text} value={answer.id} />
+                  <Picker.Item key={answer.id} label={answer.answer_text} value={answer.id} color="#0F172A" />
                 ))}
               </Picker>
             </View>
-          ))}
+          </View>
+        ))}
 
-          {/* Submit button */}
-          <TouchableOpacity style={assessmentStyle.submitButton} onPress={handleSubmit}>
-            <Text style={assessmentStyle.submitButtonText}>ยืนยันคำตอบ</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.submitButtonText}>ยืนยันคำตอบ</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
+  container: {
+    padding: 16,
+    paddingBottom: 32,
+  },
+  headerContainer: {
+    backgroundColor: '#E6F0FA',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#D0E2F5',
+  },
+  headerText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#1E3A8A',
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  descriptionText: {
+    fontSize: 12,
+    color: '#EF4444',
+    textAlign: 'center',
+    marginTop: 8,
+    fontWeight: '600',
+  },
+  cardAss: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#F1F5F9',
+  },
+  questionText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1E293B',
+    lineHeight: 22,
+    marginBottom: 12,
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderRadius: 12,
+    backgroundColor: '#F8FAFC',
+    overflow: 'hidden',
+  },
+  picker: {
+    height: 48,
+    width: '100%',
+  },
+  submitButton: {
+    backgroundColor: colors.light.primary,
+    borderRadius: 12,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+});

@@ -10,12 +10,17 @@ import { useAuth } from '../context/AuthProvider';
 import AuthStackScreen from './AuthStackScreen';
 import SettingStackScreen from './SettingStackScreen';
 import KnowledgeStackScreen from './KnowledgeStackScreen';
+import Loading from '../components/Loading';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function AppNavigation() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <NavigationContainer>
