@@ -13,8 +13,9 @@ export default function KnowledgeStackScreen() {
         options={{ headerShown: false }}
          />
       <KnowledgeStack.Screen
-        name="สาระน่ารู้"
+        name="KnowledgeDetail"
         component={KnowledgeDetailScreen} options={{
+          title: 'สาระน่ารู้',
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: '#69AFEF', // Background color

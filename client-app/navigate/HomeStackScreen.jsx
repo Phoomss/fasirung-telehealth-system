@@ -12,7 +12,7 @@ export default function HomeStackScreen() {
     return (
         <HomeStack.Navigator>
             <HomeStack.Screen
-                name="Home"
+                name="HomeMain"
                 component={HomeScreen}
                 options={{ headerShown: false }} // Hide header on Home screen
             />

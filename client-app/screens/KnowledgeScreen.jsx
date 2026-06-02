@@ -50,7 +50,7 @@ export default function KnowledgeScreen() {
                 styles.serviceButton,
                 { backgroundColor: index % 2 === 0 ? '#69AFEF' : '#288CE866' },
               ]}
-              onPress={() => navigation.navigate('สาระน่ารู้', { contentId: item.id })}
+              onPress={() => navigation.navigate('KnowledgeDetail', { contentId: item.id })}
             >
               <Text
                 style={[
