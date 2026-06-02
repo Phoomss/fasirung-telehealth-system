@@ -1,8 +1,9 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import { BASE_URL } from '../constants/config';
 
 const defaultOptions = {
-    baseURL: "http://10.0.2.2:8080/", 
+    baseURL: BASE_URL, 
     headers: {
         "Content-Type": "application/json",
     },
