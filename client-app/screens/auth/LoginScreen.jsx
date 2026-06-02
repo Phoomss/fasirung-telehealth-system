@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, SafeAreaView, ScrollView, Platform } from 'react-native';
 import React, { useState } from 'react';
-import auth_back from '../../assets/auth_back.png';
+import logo from '../../assets/logo.jpg';
 import authService from '../../services/AuthService';
 import { useAuth } from '../../context/AuthProvider';
 import { colors } from '../../constants/theme';
@@ -33,7 +33,7 @@ export default function LoginScreen({ navigation }) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.headerImageContainer}>
-          <Image source={auth_back} style={styles.backgroundImage} resizeMode="contain" />
+          <Image source={logo} style={styles.logoImage} resizeMode="contain" />
         </View>
 
         <View style={styles.card}>
@@ -111,12 +111,13 @@ const styles = StyleSheet.create({
   headerImageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: Platform.OS === 'ios' ? 20 : 10,
+    paddingVertical: Platform.OS === 'ios' ? 32 : 24,
     backgroundColor: '#F8FAFC',
   },
-  backgroundImage: {
-    width: '100%',
-    height: 180,
+  logoImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 24,
   },
   card: {
     backgroundColor: '#FFFFFF',

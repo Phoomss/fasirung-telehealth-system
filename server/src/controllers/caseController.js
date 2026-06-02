@@ -38,7 +38,7 @@ exports.caseInfo = async (req, res, next) => {
 
 exports.caseUserInfo = async (req, res, next) => {
     try {
-        const userId = parseInt(req.params.id, 10);
+        const userId = parseInt(req.user.id, 10);
         const query = await caseService.caseUserInfo(userId);
         return res.status(200).json({
             message: "List of cases",

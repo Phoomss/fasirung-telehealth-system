@@ -19,7 +19,7 @@ export default function AuthStackScreen() {
                 component={SignupScreen}
                 options={{ headerShown: false }}
             />
-             <AuthStack.Screen name="Home" component={HomeStackScreen}  options={{ headerShown: false }}/>
+             <AuthStack.Screen name="HomeStack" component={HomeStackScreen}  options={{ headerShown: false }}/>
         </AuthStack.Navigator>
     );
 }

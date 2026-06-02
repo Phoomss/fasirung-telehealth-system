@@ -1,7 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, SafeAreaView, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
-import auth_back from '../../assets/auth_back.png';
+import logo from '../../assets/logo.jpg';
 import authService from '../../services/AuthService';
 import { colors } from '../../constants/theme';
 import Feather from '@expo/vector-icons/Feather';
@@ -51,7 +51,7 @@ export default function SignUpScreen({ navigation }) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.headerImageContainer}>
-          <Image source={auth_back} style={styles.backgroundImage} resizeMode="contain" />
+          <Image source={logo} style={styles.logoImage} resizeMode="contain" />
         </View>
 
         <View style={styles.card}>
@@ -193,12 +193,13 @@ const styles = StyleSheet.create({
   headerImageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
+    paddingVertical: Platform.OS === 'ios' ? 24 : 16,
     backgroundColor: '#F8FAFC',
   },
-  backgroundImage: {
-    width: '100%',
-    height: 140,
+  logoImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 20,
   },
   card: {
     backgroundColor: '#FFFFFF',
